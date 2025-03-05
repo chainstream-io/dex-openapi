@@ -2,3 +2,5 @@
 /src/openapi
 
 node_modules
+
+.npmrc

@@ -1,6 +1,6 @@
 import { Centrifuge, ConnectionTokenContext } from "centrifuge";
 import { DexRequestContext } from "..";
-import { TokenActivity, TokenStat } from "./stream.model";
+import { TokenActivity, TokenStat, TokenHolder, WalletBalance } from "./stream.model";
 import { Candle, Resolution, TradeEvent } from "../openapi";
 
 
@@ -105,7 +105,7 @@ export class StreamApi {
         low: data.l,
         volume: data.v,
         resolution: data.r,
-        time: data.t,    
+        time: data.t,
       });
     });
   }
@@ -119,7 +119,7 @@ export class StreamApi {
     tokenAddress: string;
     callback: (data: TokenStat) => void;
   }
-): Unsubscrible {
+  ): Unsubscrible {
     const channel = `dex-token-stats:${chain}_${tokenAddress}`;
     return this.subscribe(channel, callback);
   }
@@ -180,7 +180,7 @@ export class StreamApi {
   }
 
   subscribeBalanceForToken({
-    chain, 
+    chain,
     walletAddress,
     tokenAddress,
     fn,
@@ -193,14 +193,63 @@ export class StreamApi {
     const channel = `dex-token-balance:${chain}_${tokenAddress}_${walletAddress}`;
     return this.subscribe(channel, fn);
   }
-}
 
+  subscribeWalletBalance({
+    chain,
+    walletAddress,
+    callback,
+  }: {
+    chain: string;
+    walletAddress: string;
+    callback: (data: WalletBalance[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-wallet-balance:${chain}_${walletAddress}`;
+    return this.subscribe(channel, (data: any) => callback([{
+      wallet_address: data.a,
+      token_address: data.ta,
+      token_price_in_usd: data.tpiu,
+      timestamp: data.t,
+      buy_amount: data.ba,
+      buy_amount_in_usd: data.baiu,
+      buys: data.bs,
+      sell_amount: data.sa,
+      sell_amount_in_usd: data.saiu,
+      sells: data.ss,
+      average_buy_price: data.abp,
+      average_sell_price: data.asp,
+      unrealized_profit_in_usd: data.upiu,
+      unrealized_profit_ratio: data.upr,
+      realized_profit_in_usd: data.rpiu,
+      realized_profit_ratio: data.rpr,
+      total_realized_profit_in_usd: data.trpiu,
+      total_realized_profit_ratio: data.trr,
+    } as WalletBalance]));
+  }
+
+  subscribeTokenHolders({
+    chain,
+    tokenAddress,
+    callback,
+  }: {
+    chain: string;
+    tokenAddress: string;
+    callback: (data: TokenHolder) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-token-general-stat-num:${chain}_${tokenAddress}`;
+    return this.subscribe(channel, (data: any) => callback({
+      token_address: data.a,
+      holders: data.v,
+      timestamp: data.ts,
+    }));
+  }
+}
 class StreamUnsubscrible<T> {
   constructor(
     private readonly streamApi: StreamApi,
     private readonly channel: string,
     private readonly fn: (data: T) => void
-  ) {}
+  ) { }
 
   unsubscribe() {
     this.streamApi.unsubscribe(this.channel, this.fn);

@@ -59,3 +59,34 @@ export interface TokenStat {
   swaps_24h: string;
   hot_level: number;
 }
+
+export interface TokenHolder {
+  token_address: string;
+  holders: number;
+  timestamp: number;
+}
+
+export interface WalletBalance {
+  wallet_address: string;
+  token_address: string;
+  token_price_in_usd: string;
+  timestamp: number;
+  open_time: Date;
+  close_time: Date;
+  last_time: Date;
+  balance: string;
+  buy_amount: string;
+  buy_amount_in_usd: string;
+  buys: string;
+  sell_amount: string;
+  sell_amount_in_usd: string;
+  sells: string;
+  average_buy_price: string;
+  average_sell_price: string; 
+  unrealized_profit_in_usd: string;
+  unrealized_profit_ratio: string;
+  realized_profit_in_usd: string;
+  realized_profit_ratio: string;
+  total_realized_profit_in_usd: string;
+  total_realized_profit_ratio: string;
+}
