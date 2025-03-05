@@ -71,10 +71,6 @@ export interface WalletBalance {
   token_address: string;
   token_price_in_usd: string;
   timestamp: number;
-  open_time: Date;
-  close_time: Date;
-  last_time: Date;
-  balance: string;
   buy_amount: string;
   buy_amount_in_usd: string;
   buys: string;
