@@ -1,5 +1,5 @@
 {
-  "npmName": "@openweb3-io/dex-aggregator",
+  "npmName": "@chainstream-io/dex",
   "useObjectParameters": true,
   "supportsES6": true
 }

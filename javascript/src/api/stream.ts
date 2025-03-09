@@ -85,6 +85,19 @@ export class StreamApi {
     }
   }
 
+  private formatScientificNotation(value: any): string {
+    if (value === null || value === undefined) {
+      return "0";
+    }
+    
+    const strValue = value.toString();
+    if (strValue.includes("e-") || strValue.includes("E-")) {
+      return Number(value).toFixed(20).replace(/\.?0+$/, "");
+    }
+    
+    return strValue;
+  }
+
   subscribeTokenCandles({
     chain,
     tokenAddress,
@@ -218,11 +231,11 @@ export class StreamApi {
       average_buy_price: data.abp,
       average_sell_price: data.asp,
       unrealized_profit_in_usd: data.upiu,
-      unrealized_profit_ratio: data.upr,
+      unrealized_profit_ratio: this.formatScientificNotation(data.upr),
       realized_profit_in_usd: data.rpiu,
-      realized_profit_ratio: data.rpr,
+      realized_profit_ratio: this.formatScientificNotation(data.rpr),
       total_realized_profit_in_usd: data.trpiu,
-      total_realized_profit_ratio: data.trr,
+      total_realized_profit_ratio: this.formatScientificNotation(data.trr),
     } as WalletBalance]));
   }
 

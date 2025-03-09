@@ -12,11 +12,13 @@ import {
   TokenApi,
   RankingApi,
   TradeApi,
+  WalletApi,
   createConfiguration,
   ServerConfiguration,
   ResponseContext,
   RequestContext,
   Middleware,
+  BearerAuthentication,
 } from "./openapi";
 import { EventSourcePolyfill } from "event-source-polyfill";
 
@@ -32,7 +34,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.6";
+export const LIB_VERSION = "0.0.15";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
@@ -52,6 +54,7 @@ export class DexClient {
   public readonly blockchain: BlockchainApi;
   public readonly dexpool: DexPoolApi;
   public readonly token: TokenApi;
+  public readonly wallet: WalletApi;
   public readonly trade: TradeApi;
   public readonly ranking: RankingApi;
   public readonly transaction: TransactionApi;
@@ -64,7 +67,7 @@ export class DexClient {
   public constructor(accessToken: string, options: DexAggregatorOptions = {}) {
     const baseUrl: string = options.serverUrl ?? "https://api.dex.chainstream.io";
     const streamUrl: string =
-      options.streamUrl ?? "wss://realtime.dex.chainstream.io/connection/websocket";
+      options.streamUrl ?? "wss://realtime-dex.chainstream.io/connection/websocket";
 
     this.requestCtx = { baseUrl, streamUrl, accessToken };
 
@@ -72,11 +75,9 @@ export class DexClient {
       baseServer: new ServerConfiguration<any>(baseUrl, {}),
       promiseMiddleware: [new UserAgentMiddleware()],
       authMethods: {
-        bearer: {
-          tokenProvider: {
-            getToken: () => accessToken,
-          },
-        },
+        default: new BearerAuthentication({
+          getToken: () => accessToken,
+        }),
       },
     });
 
@@ -94,6 +95,7 @@ export class DexClient {
     this.orderbook = new OrderApi(config);
     this.openbook = new OpenbookApi(config);
     this.stream = new StreamApi(this.requestCtx);
+    this.wallet = new WalletApi(config);
     this.stream.connect();
   }
 
