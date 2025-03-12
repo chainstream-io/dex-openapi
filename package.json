@@ -3,7 +3,9 @@
   "scripts": {
     "bump-version": "node tools/bump_version.js",
     "update-postman": "node tools/update_postman.js",
-    "generate": "bash ./regen_openapi.sh"
+    "generate": "bash ./regen_openapi.sh",
+    "generate:swift": "bash ./regen_swift.sh",
+    "publish:swift": "bash ./tools/publish_swift_sdk.sh"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.6.0",

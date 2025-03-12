@@ -21,68 +21,88 @@ export interface TokenActivity {
 
 export interface TokenStat {
   address: string;
+  timestamp: number;
+  buys1m: number;
+  sells1m: number;
+  buyers1m: number;
+  sellers1m: number;
+  buyVolumeInUsd1m: string;
+  sellVolumeInUsd1m: string;
+  price1m: string;
+
+  buys5m: number;
+  sells5m: number;
+  buyers5m: number;
+  sellers5m: number;
+  buyVolumeInUsd5m: string;
+  sellVolumeInUsd5m: string;
+  price5m: string;
+
+  buys15m: number;
+  sells15m: number;
+  buyers15m: number;
+  sellers15m: number;
+  buyVolumeInUsd15m: string;
+  sellVolumeInUsd15m: string;
+  price15m: string;
+
+  buys30m: number;
+  sells30m: number;
+  buyers30m: number;
+  sellers30m: number;
+  buyVolumeInUsd30m: string;
+  sellVolumeInUsd30m: string;
+  price30m: string;
+
+  buys1h: number;
+  sells1h: number;
+  buyers1h: number;
+  sellers1h: number;
+  buyVolumeInUsd1h: string;
+  sellVolumeInUsd1h: string;
+  price1h: string;
+
+  buys4h: number;
+  sells4h: number;
+  buyers4h: number;
+  sellers4h: number;
+  buyVolumeInUsd4h: string;
+  sellVolumeInUsd4h: string;
+  price4h: string;
+
+  buys24h: number;
+  sells24h: number;
+  buyers24h: number;
+  sellers24h: number;
+  buyVolumeInUsd24h: string;
+  sellVolumeInUsd24h: string;
+  price24h: string;
   price: string;
-  price_1m: string;
-  price_5m: string;
-  price_1h: string;
-  price_6h: string;
-  price_24h: string;
-  buys_1m: string;
-  buys_5m: string;
-  buys_1h: string;
-  buys_6h: string;
-  buys_24h: string;
-  sells_1m: string;
-  sells_5m: string;
-  sells_1h: string;
-  sells_6h: string;
-  sells_24h: string;
-  volume_1m: string;
-  volume_5m: string;
-  volume_1h: string;
-  volume_6h: string;
-  volume_24h: string;
-  buy_volume_1m: string;
-  buy_volume_5m: string;
-  buy_volume_1h: string;
-  buy_volume_6h: string;
-  buy_volume_24h: string;
-  sell_volume_1m: string;
-  sell_volume_5m: string;
-  sell_volume_1h: string;
-  sell_volume_6h: string;
-  sell_volume_24h: string;
-  swaps_1m: string;
-  swaps_5m: string;
-  swaps_1h: string;
-  swaps_6h: string;
-  swaps_24h: string;
-  hot_level: number;
 }
 
 export interface TokenHolder {
-  token_address: string;
+  tokenAddress: string;
   holders: number;
   timestamp: number;
 }
 
 export interface WalletBalance {
-  wallet_address: string;
-  token_address: string;
-  token_price_in_usd: string;
+  walletAddress: string;
+  tokenAddress: string;
+  tokenPriceInUsd: string;
   timestamp: number;
-  buy_amount: string;
-  buy_amount_in_usd: string;
+  buyAmount: string;
+  buyAmountInUsd: string;
   buys: string;
-  sell_amount: string;
-  sell_amount_in_usd: string;
+  sellAmount: string;
+  sellAmountInUsd: string;
   sells: string;
-  average_buy_price: string;
-  average_sell_price: string; 
-  unrealized_profit_in_usd: string;
-  unrealized_profit_ratio: string;
-  realized_profit_in_usd: string;
-  realized_profit_ratio: string;
-  total_realized_profit_in_usd: string;
-  total_realized_profit_ratio: string;
+  averageBuyPrice: string;
+  averageSellPrice: string; 
+  unrealizedProfitInUsd: string;
+  unrealizedProfitRatio: string;
+  realizedProfitInUsd: string;
+  realizedProfitRatio: string;
+  totalRealizedProfitInUsd: string;
+  totalRealizedProfitRatio: string;
 }

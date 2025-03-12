@@ -34,7 +34,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.15";
+export const LIB_VERSION = "0.0.22";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
@@ -65,7 +65,7 @@ export class DexClient {
   public readonly stream: StreamApi;
 
   public constructor(accessToken: string, options: DexAggregatorOptions = {}) {
-    const baseUrl: string = options.serverUrl ?? "https://api.dex.chainstream.io";
+    const baseUrl: string = options.serverUrl ?? "https://api-dex.chainstream.io";
     const streamUrl: string =
       options.streamUrl ?? "wss://realtime-dex.chainstream.io/connection/websocket";
 

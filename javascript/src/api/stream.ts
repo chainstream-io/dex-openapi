@@ -1,6 +1,6 @@
 import { Centrifuge, ConnectionTokenContext } from "centrifuge";
 import { DexRequestContext } from "..";
-import { TokenActivity, TokenStat, TokenHolder, WalletBalance } from "./stream.model";
+import { TokenStat, TokenHolder, WalletBalance } from "./stream.model";
 import { Candle, Resolution, TradeEvent } from "../openapi";
 
 
@@ -123,7 +123,7 @@ export class StreamApi {
     });
   }
 
-  subscribeTokenStat({
+  subscribeTokenStats({
     chain,
     tokenAddress,
     callback,
@@ -134,21 +134,74 @@ export class StreamApi {
   }
   ): Unsubscrible {
     const channel = `dex-token-stats:${chain}_${tokenAddress}`;
-    return this.subscribe(channel, callback);
-  }
+    return this.subscribe(channel, (data: any) => callback({
+        address: data.a,
+        timestamp: data.t,
+        buys1m: data.b1m,
+        sells1m: data.s1m,
+        buyers1m: data.be1m,
+        sellers1m: data.se1m,
+        buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
+        sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
+        price1m: this.formatScientificNotation(data.p1m),
+        buys5m: data.b5m,
+        sells5m: data.s5m,
+        buyers5m: data.be5m,
+        sellers5m: data.se5m,
+        buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
+        sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
+        price5m: this.formatScientificNotation(data.p5m),
+        buys15m: data.b15m,
+        sells15m: data.s15m,
+        buyers15m: data.be15m,
+        sellers15m: data.se15m,
+        buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
+        sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
+        price15m: this.formatScientificNotation(data.p15m),
+        buys30m: data.b30m,
+        sells30m: data.s30m,
+        buyers30m: data.be30m,
+        sellers30m: data.se30m,
+        buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
+        sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
+        price30m: this.formatScientificNotation(data.p30m),
+        buys1h: data.b1h,
+        sells1h: data.s1h,
+        buyers1h: data.be1h,
+        sellers1h: data.se1h,
+        buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
+        sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
+        price1h: this.formatScientificNotation(data.p1h),
+        buys4h: data.b4h,
+        sells4h: data.s4h,
+        buyers4h: data.be4h,
+        sellers4h: data.se4h,
+        buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
+        sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
+        price4h: this.formatScientificNotation(data.p4h),
+        buys24h: data.b24h,
+        sells24h: data.s24h,
+        buyers24h: data.be24h,
+        sellers24h: data.se24h,
+        buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
+        sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
+        price24h: this.formatScientificNotation(data.p24h),
+        price: this.formatScientificNotation(data.p),
+      } as TokenStat));
+    }
 
-  subscribeTokenActivities({
-    chain,
-    tokenAddress,
-    callback,
-  }: {
-    chain: string;
-    tokenAddress: string;
-    callback: (data: TokenActivity[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-token-activities:${chain}_${tokenAddress}`;
-    return this.subscribe(channel, callback);
-  }
+  // subscribeTokenActivities({
+  //   chain,
+  //   tokenAddress,
+  //   callback,
+  // }: {
+  //   chain: string;
+  //   tokenAddress: string;
+  //   callback: (data: TokenActivity[]) => void;
+  // }): Unsubscrible {
+  //   const channel = `dex-token-activities:${chain}_${tokenAddress}`;
+  //   return this.subscribe(channel, callback);
+  // }
 
   subscribeTokenTrades({
     chain,
@@ -167,7 +220,7 @@ export class StreamApi {
         quoteAmount: it.sa,
         // quoteSymbol: ,
         quoteAddress: it.swa,
-        amountInUsd: it.bais,
+        amountInUsd: it.baiu,
         timestamp: it.t,
         event: it.k,
         txHash: it.h,
@@ -177,34 +230,6 @@ export class StreamApi {
         tokenAddress: it.a,
       } as TradeEvent))
     ));
-  }
-
-  subscribeBalance({
-    chain,
-    address,
-    callback,
-  }: {
-    chain: string;
-    address: string;
-    callback: (data: any) => void;
-  }): Unsubscrible {
-    const channel = `dex-balance:${chain}_${address}`;
-    return this.subscribe(channel, callback);
-  }
-
-  subscribeBalanceForToken({
-    chain,
-    walletAddress,
-    tokenAddress,
-    fn,
-  }: {
-    chain: string;
-    tokenAddress: string;
-    walletAddress: string;
-    fn: (data: any) => void;
-  }): Unsubscrible {
-    const channel = `dex-token-balance:${chain}_${tokenAddress}_${walletAddress}`;
-    return this.subscribe(channel, fn);
   }
 
   subscribeWalletBalance({
@@ -218,24 +243,24 @@ export class StreamApi {
   }): Unsubscrible {
     const channel = `dex-wallet-balance:${chain}_${walletAddress}`;
     return this.subscribe(channel, (data: any) => callback([{
-      wallet_address: data.a,
-      token_address: data.ta,
-      token_price_in_usd: data.tpiu,
+      walletAddress: data.a,
+      tokenAddress: data.ta,
+      tokenPriceInUsd: data.tpiu,
       timestamp: data.t,
-      buy_amount: data.ba,
-      buy_amount_in_usd: data.baiu,
+      buyAmount: data.ba,
+      buyAmountInUsd: data.baiu,
       buys: data.bs,
-      sell_amount: data.sa,
-      sell_amount_in_usd: data.saiu,
+      sellAmount: data.sa,
+      sellAmountInUsd: data.saiu,
       sells: data.ss,
-      average_buy_price: data.abp,
-      average_sell_price: data.asp,
-      unrealized_profit_in_usd: data.upiu,
-      unrealized_profit_ratio: this.formatScientificNotation(data.upr),
-      realized_profit_in_usd: data.rpiu,
-      realized_profit_ratio: this.formatScientificNotation(data.rpr),
-      total_realized_profit_in_usd: data.trpiu,
-      total_realized_profit_ratio: this.formatScientificNotation(data.trr),
+      averageBuyPrice: data.abp,
+      averageSellPrice: data.asp,
+      unrealizedProfitInUsd: data.upiu,
+      unrealizedProfitRatio: this.formatScientificNotation(data.upr),
+      realizedProfitInUsd: data.rpiu,
+      realizedProfitRatio: this.formatScientificNotation(data.rpr),
+      totalRealizedProfitInUsd: data.trpiu,
+      totalRealizedProfitRatio: this.formatScientificNotation(data.trr),
     } as WalletBalance]));
   }
 
@@ -251,7 +276,7 @@ export class StreamApi {
   ): Unsubscrible {
     const channel = `dex-token-general-stat-num:${chain}_${tokenAddress}`;
     return this.subscribe(channel, (data: any) => callback({
-      token_address: data.a,
+      tokenAddress: data.a,
       holders: data.v,
       timestamp: data.ts,
     }));
