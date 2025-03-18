@@ -281,6 +281,30 @@ export class StreamApi {
       timestamp: data.ts,
     }));
   }
+
+  subscribeWalletTrades({
+    chain,
+    walletAddress,
+    callback,
+  }: {
+    chain: string;
+    walletAddress: string;
+    callback: (data: TradeEvent) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-wallet-trade:${chain}_${walletAddress}`;
+    return this.subscribe(channel, (data: any) => callback({
+      maker: data.bwa,
+      baseAmount: data.ba,
+      quoteAmount: data.sa,
+      quoteAddress: data.swa,
+      amountInUsd: data.baiu,
+      timestamp: data.t,
+      event: data.k,
+      txHash: data.h,
+      tokenAddress: data.a,
+    } as TradeEvent));
+  }
 }
 class StreamUnsubscrible<T> {
   constructor(

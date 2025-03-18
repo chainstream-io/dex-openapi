@@ -11,3 +11,6 @@ composer.lock
 
 # Swift
 /swift/
+
+
+/test/*
