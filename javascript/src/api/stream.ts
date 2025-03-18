@@ -282,7 +282,7 @@ export class StreamApi {
     }));
   }
 
-  subscribeWalletTrades({
+  subscribeWalletTrade({
     chain,
     walletAddress,
     callback,
