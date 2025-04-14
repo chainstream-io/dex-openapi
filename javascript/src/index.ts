@@ -34,7 +34,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.39";
+export const LIB_VERSION = "0.0.41";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
@@ -140,7 +140,7 @@ export class DexClient {
       };
 
       sse.onerror = (error: any) => {
-        if (error.message.includes("No activity within")) {
+        if (error.message?.includes("No activity within")) {
           console.log("SSE reconnecting due to inactivity...");
           return;
         }

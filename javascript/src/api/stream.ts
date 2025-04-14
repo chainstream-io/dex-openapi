@@ -123,6 +123,31 @@ export class StreamApi {
     });
   }
 
+  subscribeTokenCandlesV1({
+    chain,
+    tokenAddress,
+    resolution,
+    callback,
+  }: {
+    chain: string;
+    tokenAddress: string;
+    resolution: Resolution;
+    callback: (data: Candle) => void;
+  }): Unsubscrible {
+    const channel = `dex-candle-v1:${chain}_${tokenAddress}_${resolution}`;
+    return this.subscribe(channel, (data: any) => {
+      callback({
+        open: data.o,
+        close: data.c,
+        high: data.h,
+        low: data.l,
+        volume: data.v,
+        resolution: data.r,
+        time: data.t,
+      });
+    });
+  }
+
   subscribeTokenStats({
     chain,
     tokenAddress,
