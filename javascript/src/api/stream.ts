@@ -1,6 +1,6 @@
 import { Centrifuge, ConnectionTokenContext } from "centrifuge";
 import { DexRequestContext } from "..";
-import { TokenStat, TokenHolder, WalletBalance } from "./stream.model";
+import { TokenStat, TokenHolder, WalletBalance, NewTokenMetadata, NewToken } from "./stream.model";
 import { Candle, Resolution, TradeEvent } from "../openapi";
 
 
@@ -89,12 +89,12 @@ export class StreamApi {
     if (value === null || value === undefined) {
       return "0";
     }
-    
+
     const strValue = value.toString();
     if (strValue.includes("e-") || strValue.includes("E-")) {
       return Number(value).toFixed(20).replace(/\.?0+$/, "");
     }
-    
+
     return strValue;
   }
 
@@ -160,60 +160,190 @@ export class StreamApi {
   ): Unsubscrible {
     const channel = `dex-token-stats:${chain}_${tokenAddress}`;
     return this.subscribe(channel, (data: any) => callback({
-        address: data.a,
-        timestamp: data.t,
-        buys1m: data.b1m,
-        sells1m: data.s1m,
-        buyers1m: data.be1m,
-        sellers1m: data.se1m,
-        buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
-        sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
-        price1m: this.formatScientificNotation(data.p1m),
-        buys5m: data.b5m,
-        sells5m: data.s5m,
-        buyers5m: data.be5m,
-        sellers5m: data.se5m,
-        buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
-        sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
-        price5m: this.formatScientificNotation(data.p5m),
-        buys15m: data.b15m,
-        sells15m: data.s15m,
-        buyers15m: data.be15m,
-        sellers15m: data.se15m,
-        buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
-        sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
-        price15m: this.formatScientificNotation(data.p15m),
-        buys30m: data.b30m,
-        sells30m: data.s30m,
-        buyers30m: data.be30m,
-        sellers30m: data.se30m,
-        buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
-        sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
-        price30m: this.formatScientificNotation(data.p30m),
-        buys1h: data.b1h,
-        sells1h: data.s1h,
-        buyers1h: data.be1h,
-        sellers1h: data.se1h,
-        buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
-        sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
-        price1h: this.formatScientificNotation(data.p1h),
-        buys4h: data.b4h,
-        sells4h: data.s4h,
-        buyers4h: data.be4h,
-        sellers4h: data.se4h,
-        buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
-        sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
-        price4h: this.formatScientificNotation(data.p4h),
-        buys24h: data.b24h,
-        sells24h: data.s24h,
-        buyers24h: data.be24h,
-        sellers24h: data.se24h,
-        buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
-        sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
-        price24h: this.formatScientificNotation(data.p24h),
-        price: this.formatScientificNotation(data.p),
-      } as TokenStat));
-    }
+      address: data.a,
+      timestamp: data.t,
+      buys1m: data.b1m,
+      sells1m: data.s1m,
+      buyers1m: data.be1m,
+      sellers1m: data.se1m,
+      buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
+      sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
+      price1m: this.formatScientificNotation(data.p1m),
+      buys5m: data.b5m,
+      sells5m: data.s5m,
+      buyers5m: data.be5m,
+      sellers5m: data.se5m,
+      buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
+      sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
+      price5m: this.formatScientificNotation(data.p5m),
+      buys15m: data.b15m,
+      sells15m: data.s15m,
+      buyers15m: data.be15m,
+      sellers15m: data.se15m,
+      buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
+      sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
+      price15m: this.formatScientificNotation(data.p15m),
+      buys30m: data.b30m,
+      sells30m: data.s30m,
+      buyers30m: data.be30m,
+      sellers30m: data.se30m,
+      buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
+      sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
+      price30m: this.formatScientificNotation(data.p30m),
+      buys1h: data.b1h,
+      sells1h: data.s1h,
+      buyers1h: data.be1h,
+      sellers1h: data.se1h,
+      buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
+      sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
+      price1h: this.formatScientificNotation(data.p1h),
+      buys4h: data.b4h,
+      sells4h: data.s4h,
+      buyers4h: data.be4h,
+      sellers4h: data.se4h,
+      buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
+      sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
+      price4h: this.formatScientificNotation(data.p4h),
+      buys24h: data.b24h,
+      sells24h: data.s24h,
+      buyers24h: data.be24h,
+      sellers24h: data.se24h,
+      buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
+      sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
+      price24h: this.formatScientificNotation(data.p24h),
+      price: this.formatScientificNotation(data.p),
+    } as TokenStat));
+  }
+
+  subscribeHotTokenStats({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenStat) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-ranking-trending-tokens-stats:${chain}`;
+    return this.subscribe(channel, (data: any) => callback({
+      address: data.a,
+      timestamp: data.t,
+      buys1m: data.b1m,
+      sells1m: data.s1m,
+      buyers1m: data.be1m,
+      sellers1m: data.se1m,
+      buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
+      sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
+      price1m: this.formatScientificNotation(data.p1m),
+      buys5m: data.b5m,
+      sells5m: data.s5m,
+      buyers5m: data.be5m,
+      sellers5m: data.se5m,
+      buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
+      sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
+      price5m: this.formatScientificNotation(data.p5m),
+      buys15m: data.b15m,
+      sells15m: data.s15m,
+      buyers15m: data.be15m,
+      sellers15m: data.se15m,
+      buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
+      sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
+      price15m: this.formatScientificNotation(data.p15m),
+      buys30m: data.b30m,
+      sells30m: data.s30m,
+      buyers30m: data.be30m,
+      sellers30m: data.se30m,
+      buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
+      sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
+      price30m: this.formatScientificNotation(data.p30m),
+      buys1h: data.b1h,
+      sells1h: data.s1h,
+      buyers1h: data.be1h,
+      sellers1h: data.se1h,
+      buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
+      sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
+      price1h: this.formatScientificNotation(data.p1h),
+      buys4h: data.b4h,
+      sells4h: data.s4h,
+      buyers4h: data.be4h,
+      sellers4h: data.se4h,
+      buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
+      sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
+      price4h: this.formatScientificNotation(data.p4h),
+      buys24h: data.b24h,
+      sells24h: data.s24h,
+      buyers24h: data.be24h,
+      sellers24h: data.se24h,
+      buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
+      sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
+      price24h: this.formatScientificNotation(data.p24h),
+      price: this.formatScientificNotation(data.p),
+    } as TokenStat));
+  }
+
+  subscribeNewTokenStats({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenStat) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-ranking-new-tokens-stats:${chain}`;
+    return this.subscribe(channel, (data: any) => callback({
+      address: data.a,
+      timestamp: data.t,
+      buys1m: data.b1m,
+      sells1m: data.s1m,
+      buyers1m: data.be1m,
+      sellers1m: data.se1m,
+      buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
+      sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
+      price1m: this.formatScientificNotation(data.p1m),
+      buys5m: data.b5m,
+      sells5m: data.s5m,
+      buyers5m: data.be5m,
+      sellers5m: data.se5m,
+      buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
+      sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
+      price5m: this.formatScientificNotation(data.p5m),
+      buys15m: data.b15m,
+      sells15m: data.s15m,
+      buyers15m: data.be15m,
+      sellers15m: data.se15m,
+      buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
+      sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
+      price15m: this.formatScientificNotation(data.p15m),
+      buys30m: data.b30m,
+      sells30m: data.s30m,
+      buyers30m: data.be30m,
+      sellers30m: data.se30m,
+      buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
+      sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
+      price30m: this.formatScientificNotation(data.p30m),
+      buys1h: data.b1h,
+      sells1h: data.s1h,
+      buyers1h: data.be1h,
+      sellers1h: data.se1h,
+      buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
+      sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
+      price1h: this.formatScientificNotation(data.p1h),
+      buys4h: data.b4h,
+      sells4h: data.s4h,
+      buyers4h: data.be4h,
+      sellers4h: data.se4h,
+      buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
+      sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
+      price4h: this.formatScientificNotation(data.p4h),
+      buys24h: data.b24h,
+      sells24h: data.s24h,
+      buyers24h: data.be24h,
+      sellers24h: data.se24h,
+      buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
+      sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
+      price24h: this.formatScientificNotation(data.p24h),
+      price: this.formatScientificNotation(data.p),
+    } as TokenStat));
+  }
 
   // subscribeTokenActivities({
   //   chain,
@@ -287,6 +417,56 @@ export class StreamApi {
       totalRealizedProfitInUsd: data.trpiu,
       totalRealizedProfitRatio: this.formatScientificNotation(data.trr),
     } as WalletBalance]));
+  }
+
+  subscribeNewTokensMetadata({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: NewTokenMetadata[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-new-tokens-metadata:${chain}`;
+    return this.subscribe(channel, (data: any) => callback([{
+      tokenAddress: data.a,
+      name: data.n,
+      symbol: data.s,
+      imageUrl: data.iu,
+      description: data.de,
+      socialMedia: {
+        twitter: data.sm?.tw || "",
+        telegram: data.sm?.tg || "",
+        website: data.sm?.w || "",
+        tiktok: data.sm?.tt || "",
+        discord: data.sm?.dc || "",
+        facebook: data.sm?.fb || "",
+        github: data.sm?.gh || "",
+        instagram: data.sm?.ig || "",
+        linkedin: data.sm?.li || "",
+        medium: data.sm?.md || "",
+        reddit: data.sm?.rd || "",
+        youtube: data.sm?.yt || "",
+        bitbucket: data.sm?.bb || ""
+      },
+      createdAtMs: data.cts,
+    } as NewTokenMetadata]));
+  }
+
+  subscribeNewTokens({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: NewToken[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-new-tokens:${chain}`;
+    return this.subscribe(channel, (data: any) => callback([{
+      tokenAddress: data.a,
+      name: data.n,
+      symbol: data.s,
+      description: data.de,
+      createdAtMs: data.cts,
+    } as NewToken]));
   }
 
   subscribeTokenHolders({

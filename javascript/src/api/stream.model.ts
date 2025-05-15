@@ -106,3 +106,37 @@ export interface WalletBalance {
   totalRealizedProfitInUsd: string;
   totalRealizedProfitRatio: string;
 }
+
+export interface NewToken {
+  tokenAddress: string;
+  name: string;
+  symbol: string;
+  description: string;
+  createdAtMs: number;
+}
+
+export interface NewTokenMetadata {
+  tokenAddress: string;
+  name: string;
+  symbol: string;
+  imageUrl: string;
+  description: string;
+  socialMedia: socialMedia;
+  createdAtMs: number;
+}
+
+export interface socialMedia {
+  twitter: string;
+  telegram: string;
+  website: string;
+  tiktok: string;
+  discord: string;
+  facebook: string;
+  github: string;
+  instagram: string;
+  linkedin: string;
+  medium: string;
+  reddit: string;
+  youtube: string;
+  bitbucket: string;
+}
