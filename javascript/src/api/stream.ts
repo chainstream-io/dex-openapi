@@ -446,7 +446,7 @@ export class StreamApi {
         medium: data.sm?.md || "",
         reddit: data.sm?.rd || "",
         youtube: data.sm?.yt || "",
-        bitbucket: data.sm?.bb || ""
+        bitbucket: data.sm?.bb || "",
       },
       createdAtMs: data.cts,
     } as NewTokenMetadata]));
