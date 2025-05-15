@@ -427,29 +427,31 @@ export class StreamApi {
     callback: (data: NewTokenMetadata[]) => void;
   }): Unsubscrible {
     const channel = `dex-new-tokens-metadata:${chain}`;
-    return this.subscribe(channel, (data: any) => callback([{
-      tokenAddress: data.a,
-      name: data.n,
-      symbol: data.s,
-      imageUrl: data.iu,
-      description: data.de,
-      socialMedia: {
-        twitter: data.sm?.tw || "",
-        telegram: data.sm?.tg || "",
-        website: data.sm?.w || "",
-        tiktok: data.sm?.tt || "",
-        discord: data.sm?.dc || "",
-        facebook: data.sm?.fb || "",
-        github: data.sm?.gh || "",
-        instagram: data.sm?.ig || "",
-        linkedin: data.sm?.li || "",
-        medium: data.sm?.md || "",
-        reddit: data.sm?.rd || "",
-        youtube: data.sm?.yt || "",
-        bitbucket: data.sm?.bb || "",
-      },
-      createdAtMs: data.cts,
-    } as NewTokenMetadata]));
+    return this.subscribe(channel, (data: any[]) => callback(
+      data.map((it: any) => ({
+        tokenAddress: it.a,
+        name: it.n,
+        symbol: it.s,
+        imageUrl: it.iu,
+        description: it.de,
+        socialMedia: {
+          twitter: it.sm?.tw || "",
+          telegram: it.sm?.tg || "",
+          website: it.sm?.w || "",
+          tiktok: it.sm?.tt || "",
+          discord: it.sm?.dc || "",
+          facebook: it.sm?.fb || "",
+          github: it.sm?.gh || "",
+          instagram: it.sm?.ig || "",
+          linkedin: it.sm?.li || "",
+          medium: it.sm?.md || "",
+          reddit: it.sm?.rd || "",
+          youtube: it.sm?.yt || "",
+          bitbucket: it.sm?.bb || "",
+        },
+        createdAtMs: it.cts,
+      } as NewTokenMetadata))
+    ));
   }
 
   subscribeNewTokens({
@@ -460,13 +462,15 @@ export class StreamApi {
     callback: (data: NewToken[]) => void;
   }): Unsubscrible {
     const channel = `dex-new-tokens:${chain}`;
-    return this.subscribe(channel, (data: any) => callback([{
-      tokenAddress: data.a,
-      name: data.n,
-      symbol: data.s,
-      description: data.de,
-      createdAtMs: data.cts,
-    } as NewToken]));
+    return this.subscribe(channel, (data: any[]) => callback(
+      data.map((it: any) => ({
+        tokenAddress: it.a,
+        name: it.n,
+        symbol: it.s,
+        description: it.de,
+        createdAtMs: it.cts,
+      } as NewToken))
+    ));
   }
 
   subscribeTokenHolders({
