@@ -10,6 +10,7 @@ import {
   TokenLiquidity,
   WalletBalance,
   TokenSupply,
+  WalletPnl,
 } from "./stream.model";
 
 
@@ -411,21 +412,40 @@ export class StreamApi {
       tokenAddress: data.ta,
       tokenPriceInUsd: data.tpiu,
       timestamp: data.t,
-      buyAmount: data.ba,
-      buyAmountInUsd: data.baiu,
-      buys: data.bs,
-      sellAmount: data.sa,
-      sellAmountInUsd: data.saiu,
-      sells: data.ss,
-      averageBuyPrice: data.abp,
-      averageSellPrice: data.asp,
-      unrealizedProfitInUsd: data.upiu,
-      unrealizedProfitRatio: this.formatScientificNotation(data.upr),
-      realizedProfitInUsd: data.rpiu,
-      realizedProfitRatio: this.formatScientificNotation(data.rpr),
-      totalRealizedProfitInUsd: data.trpiu,
-      totalRealizedProfitRatio: this.formatScientificNotation(data.trr),
     } as WalletBalance]));
+  }
+
+  subscribeWalletPnl({
+    chain,
+    walletAddress,
+    callback,
+  }: {
+    chain: string;
+    walletAddress: string;
+    callback: (data: WalletPnl[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-wallet-pnl-list:${chain}_${walletAddress}`;
+    return this.subscribe(channel, (data: any[]) => callback(
+      data?.map((it: any) => ({
+        walletAddress: it.a,
+        buys: it.bs,
+        buyAmount: it.ba,
+        buyAmountInUsd: it.baiu,
+        averageBuyPriceInUsd: it.abpiu,
+        sellAmount: it.sa,
+        sellAmountInUsd: it.saiu,
+        sells: it.ss,
+        wins: it.ws,
+        winRatio: it.wr,
+        pnlInUsd: it.piu,
+        averagePnlInUsd: it.apiu,
+        pnlRatio: it.pr,
+        profitableDays: it.pd,
+        losingDays: it.ld,
+        tokens: it.ts,
+        resolution: it.r,
+      } as WalletPnl))
+    ));
   }
 
   subscribeNewTokensMetadata({

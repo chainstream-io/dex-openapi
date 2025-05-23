@@ -91,20 +91,26 @@ export interface WalletBalance {
   tokenAddress: string;
   tokenPriceInUsd: string;
   timestamp: number;
+}
+
+export interface WalletPnl {
+  walletAddress: string;
+  buys: number;
   buyAmount: string;
   buyAmountInUsd: string;
-  buys: string;
+  averageBuyPriceInUsd: string;
   sellAmount: string;
   sellAmountInUsd: string;
-  sells: string;
-  averageBuyPrice: string;
-  averageSellPrice: string; 
-  unrealizedProfitInUsd: string;
-  unrealizedProfitRatio: string;
-  realizedProfitInUsd: string;
-  realizedProfitRatio: string;
-  totalRealizedProfitInUsd: string;
-  totalRealizedProfitRatio: string;
+  sells: number;
+  wins: number;
+  winRatio: string;
+  pnlInUsd: string;
+  averagePnlInUsd: string;
+  pnlRatio: string;
+  profitableDays: number;
+  losingDays: number;
+  tokens: number;
+  resolution: string;
 }
 
 export interface NewToken {
