@@ -1,7 +1,16 @@
 import { Centrifuge, ConnectionTokenContext } from "centrifuge";
 import { DexRequestContext } from "..";
-import { TokenStat, TokenHolder, WalletBalance, NewTokenMetadata, NewToken } from "./stream.model";
 import { Candle, Resolution, TradeEvent } from "../openapi";
+import {
+  DexPoolBalance,
+  NewToken,
+  NewTokenMetadata,
+  TokenHolder,
+  TokenStat,
+  TokenLiquidity,
+  WalletBalance,
+  TokenSupply,
+} from "./stream.model";
 
 
 export interface Unsubscrible {
@@ -487,6 +496,64 @@ export class StreamApi {
     return this.subscribe(channel, (data: any) => callback({
       tokenAddress: data.a,
       holders: data.v,
+      timestamp: data.ts,
+    }));
+  }
+
+  subscribeTokenSupply({
+    chain,
+    tokenAddress,
+    callback,
+  }: {
+    chain: string;
+    tokenAddress: string;
+    callback: (data: TokenSupply) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-token-supply:${chain}_${tokenAddress}`;
+    return this.subscribe(channel, (data: any) => callback({
+      tokenAddress: data.a,
+      supply: data.s,
+      marketCapInUsd: data.mc,
+      timestamp: data.ts,
+    }));
+  }
+
+  subscribeDexPoolBalance({
+    chain,
+    poolAddress,
+    callback,
+  }: {
+    chain: string;
+    poolAddress: string;
+    callback: (data: DexPoolBalance) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-pool-balance:${chain}_${poolAddress}`;
+    return this.subscribe(channel, (data: any) => callback({
+      poolAddress: data.a,
+      tokenAAddress: data.taa,
+      tokenALiquidityInUsd: data.taliu,
+      tokenBAddress: data.tba,
+      tokenBLiquidityInUsd: data.tbliu,
+    }));
+  }
+
+  subscribeTokenLiquidity({
+    chain,
+    tokenAddress,
+    callback,
+  }: {
+    chain: string;
+    tokenAddress: string;
+    callback: (data: TokenLiquidity) => void;
+  }
+  ): Unsubscrible {
+    const channel = `dex-token-general-stat-num:${chain}_${tokenAddress}`;
+    return this.subscribe(channel, (data: any) => callback({
+      tokenAddress: data.a,
+      metricType: data.t,
+      value: data.v,
       timestamp: data.ts,
     }));
   }

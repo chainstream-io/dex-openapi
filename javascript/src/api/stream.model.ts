@@ -115,6 +115,28 @@ export interface NewToken {
   createdAtMs: number;
 }
 
+export interface TokenSupply {
+  tokenAddress: string;
+  supply: string;
+  marketCapInUsd: string;
+  timestamp: number;
+}
+
+export interface DexPoolBalance {
+  poolAddress: string;
+  tokenAAddress: string;
+  tokenALiquidityInUsd: string;
+  tokenBAddress: string;
+  tokenBLiquidityInUsd: string;
+}
+
+export interface TokenLiquidity {
+  tokenAddress: string;
+  metricType: string;
+  value: string;
+  timestamp: number;
+}
+
 export interface NewTokenMetadata {
   tokenAddress: string;
   name: string;
