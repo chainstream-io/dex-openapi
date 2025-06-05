@@ -35,7 +35,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.49";
+export const LIB_VERSION = "0.0.50";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
