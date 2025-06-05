@@ -19,10 +19,14 @@ import {
 } from "./openapi";
 import { EventSourcePolyfill } from "event-source-polyfill";
 
+export interface TokenProvider {
+  getToken(): Promise<string> | string;
+}
+
 export interface DexRequestContext {
   baseUrl: string;
   streamUrl: string;
-  accessToken: string;
+  accessToken: string | TokenProvider;
 }
 
 export interface DexAggregatorOptions {
@@ -58,10 +62,20 @@ export class DexClient {
   public readonly pumpfun: DefiSolanaPumpfunApi;
   public readonly stream: StreamApi;
 
-  public constructor(accessToken: string, options: DexAggregatorOptions = {}) {
+  public constructor(
+    accessToken: string | TokenProvider,
+    options: DexAggregatorOptions = {}
+  ) {
     const baseUrl: string = options.serverUrl ?? "https://api-dex.chainstream.io";
     const streamUrl: string =
       options.streamUrl ?? "wss://realtime-dex.chainstream.io/connection/websocket";
+
+    const tokenProvider =
+      typeof accessToken === "string"
+        ? {
+            getToken: () => accessToken,
+          }
+        : accessToken;
 
     this.requestCtx = { baseUrl, streamUrl, accessToken };
 
@@ -69,9 +83,7 @@ export class DexClient {
       baseServer: new ServerConfiguration<any>(baseUrl, {}),
       promiseMiddleware: [new UserAgentMiddleware()],
       authMethods: {
-        default: new BearerAuthentication({
-          getToken: () => accessToken,
-        }),
+        default: new BearerAuthentication(tokenProvider),
       },
     });
 
@@ -91,12 +103,17 @@ export class DexClient {
   }
 
   async waitForJob<T>(jobId: string, timeout = 60000): Promise<T> {
+    const accessToken =
+      typeof this.requestCtx.accessToken === "string"
+        ? this.requestCtx.accessToken
+        : await this.requestCtx.accessToken.getToken();
+
     return new Promise((resolve, reject) => {
       const sse = new EventSourcePolyfill(
         `${this.requestCtx.baseUrl}/jobs/${jobId}/streaming`,
         {
           headers: {
-            Authorization: `Bearer ${this.requestCtx.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
