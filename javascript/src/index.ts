@@ -5,9 +5,6 @@ import {
   TransactionApi,
   DefiSolanaMoonshotApi,
   DefiSolanaPumpfunApi,
-  OrderApi,
-  OpenbookApi,
-  BlockchainApi,
   DexPoolApi,
   TokenApi,
   RankingApi,
@@ -34,7 +31,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.47";
+export const LIB_VERSION = "0.0.49";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
@@ -51,7 +48,6 @@ export class DexClient {
   public readonly requestCtx: DexRequestContext;
   public readonly _configuration: Configuration;
   public readonly dex: DexApi;
-  public readonly blockchain: BlockchainApi;
   public readonly dexpool: DexPoolApi;
   public readonly token: TokenApi;
   public readonly wallet: WalletApi;
@@ -60,8 +56,6 @@ export class DexClient {
   public readonly transaction: TransactionApi;
   public readonly moonshot: DefiSolanaMoonshotApi;
   public readonly pumpfun: DefiSolanaPumpfunApi;
-  public readonly orderbook: OrderApi;
-  public readonly openbook: OpenbookApi;
   public readonly stream: StreamApi;
 
   public constructor(accessToken: string, options: DexAggregatorOptions = {}) {
@@ -84,7 +78,6 @@ export class DexClient {
     this._configuration = config;
     // this.authentication = new Authentication(config);
     this.dex = new DexApi(config);
-    this.blockchain = new BlockchainApi(config);
     this.dexpool = new DexPoolApi(config);
     this.token = new TokenApi(config);
     this.trade = new TradeApi(config);
@@ -92,8 +85,6 @@ export class DexClient {
     this.transaction = new TransactionApi(config);
     this.moonshot = new DefiSolanaMoonshotApi(config);
     this.pumpfun = new DefiSolanaPumpfunApi(config);
-    this.orderbook = new OrderApi(config);
-    this.openbook = new OpenbookApi(config);
     this.stream = new StreamApi(this.requestCtx);
     this.wallet = new WalletApi(config);
     this.stream.connect();
