@@ -241,64 +241,140 @@ export class StreamApi {
     callback,
   }: {
     chain: string;
-    callback: (data: TokenStat) => void;
+    callback: (data: TokenStat[]) => void;
   }): Unsubscrible {
     const channel = `dex-ranking-trending-tokens-stats:${chain}`;
-    return this.subscribe(channel, (data: any) =>
-      callback({
-        address: data.a,
-        timestamp: data.t,
-        buys1m: data.b1m,
-        sells1m: data.s1m,
-        buyers1m: data.be1m,
-        sellers1m: data.se1m,
-        buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
-        sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
-        price1m: this.formatScientificNotation(data.p1m),
-        buys5m: data.b5m,
-        sells5m: data.s5m,
-        buyers5m: data.be5m,
-        sellers5m: data.se5m,
-        buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
-        sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
-        price5m: this.formatScientificNotation(data.p5m),
-        buys15m: data.b15m,
-        sells15m: data.s15m,
-        buyers15m: data.be15m,
-        sellers15m: data.se15m,
-        buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
-        sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
-        price15m: this.formatScientificNotation(data.p15m),
-        buys30m: data.b30m,
-        sells30m: data.s30m,
-        buyers30m: data.be30m,
-        sellers30m: data.se30m,
-        buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
-        sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
-        price30m: this.formatScientificNotation(data.p30m),
-        buys1h: data.b1h,
-        sells1h: data.s1h,
-        buyers1h: data.be1h,
-        sellers1h: data.se1h,
-        buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
-        sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
-        price1h: this.formatScientificNotation(data.p1h),
-        buys4h: data.b4h,
-        sells4h: data.s4h,
-        buyers4h: data.be4h,
-        sellers4h: data.se4h,
-        buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
-        sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
-        price4h: this.formatScientificNotation(data.p4h),
-        buys24h: data.b24h,
-        sells24h: data.s24h,
-        buyers24h: data.be24h,
-        sellers24h: data.se24h,
-        buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
-        sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
-        price24h: this.formatScientificNotation(data.p24h),
-        price: this.formatScientificNotation(data.p),
-      } as TokenStat)
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              address: it.a,
+              timestamp: it.t,
+              buys1m: it.b1m,
+              sells1m: it.s1m,
+              buyers1m: it.be1m,
+              sellers1m: it.se1m,
+              buyVolumeInUsd1m: this.formatScientificNotation(it.bviu1m),
+              sellVolumeInUsd1m: this.formatScientificNotation(it.sviu1m),
+              price1m: this.formatScientificNotation(it.p1m),
+              buys5m: it.b5m,
+              sells5m: it.s5m,
+              buyers5m: it.be5m,
+              sellers5m: it.se5m,
+              buyVolumeInUsd5m: this.formatScientificNotation(it.bviu5m),
+              sellVolumeInUsd5m: this.formatScientificNotation(it.sviu5m),
+              price5m: this.formatScientificNotation(it.p5m),
+              buys15m: it.b15m,
+              sells15m: it.s15m,
+              buyers15m: it.be15m,
+              sellers15m: it.se15m,
+              buyVolumeInUsd15m: this.formatScientificNotation(it.bviu15m),
+              sellVolumeInUsd15m: this.formatScientificNotation(it.sviu15m),
+              price15m: this.formatScientificNotation(it.p15m),
+              buys30m: it.b30m,
+              sells30m: it.s30m,
+              buyers30m: it.be30m,
+              sellers30m: it.se30m,
+              buyVolumeInUsd30m: this.formatScientificNotation(it.bviu30m),
+              sellVolumeInUsd30m: this.formatScientificNotation(it.sviu30m),
+              price30m: this.formatScientificNotation(it.p30m),
+              buys1h: it.b1h,
+              sells1h: it.s1h,
+              buyers1h: it.be1h,
+              sellers1h: it.se1h,
+              buyVolumeInUsd1h: this.formatScientificNotation(it.bviu1h),
+              sellVolumeInUsd1h: this.formatScientificNotation(it.sviu1h),
+              price1h: this.formatScientificNotation(it.p1h),
+              buys4h: it.b4h,
+              sells4h: it.s4h,
+              buyers4h: it.be4h,
+              sellers4h: it.se4h,
+              buyVolumeInUsd4h: this.formatScientificNotation(it.bviu4h),
+              sellVolumeInUsd4h: this.formatScientificNotation(it.sviu4h),
+              price4h: this.formatScientificNotation(it.p4h),
+              buys24h: it.b24h,
+              sells24h: it.s24h,
+              buyers24h: it.be24h,
+              sellers24h: it.se24h,
+              buyVolumeInUsd24h: this.formatScientificNotation(it.bviu24h),
+              sellVolumeInUsd24h: this.formatScientificNotation(it.sviu24h),
+              price24h: this.formatScientificNotation(it.p24h),
+              price: this.formatScientificNotation(it.p),
+            }) as TokenStat
+        )
+      )
+    );
+  }
+
+  subscribeUsStocksTokenStats({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenStat[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-us-stocks-tokens-stats:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              address: it.a,
+              timestamp: it.t,
+              buys1m: it.b1m,
+              sells1m: it.s1m,
+              buyers1m: it.be1m,
+              sellers1m: it.se1m,
+              buyVolumeInUsd1m: this.formatScientificNotation(it.bviu1m),
+              sellVolumeInUsd1m: this.formatScientificNotation(it.sviu1m),
+              price1m: this.formatScientificNotation(it.p1m),
+              buys5m: it.b5m,
+              sells5m: it.s5m,
+              buyers5m: it.be5m,
+              sellers5m: it.se5m,
+              buyVolumeInUsd5m: this.formatScientificNotation(it.bviu5m),
+              sellVolumeInUsd5m: this.formatScientificNotation(it.sviu5m),
+              price5m: this.formatScientificNotation(it.p5m),
+              buys15m: it.b15m,
+              sells15m: it.s15m,
+              buyers15m: it.be15m,
+              sellers15m: it.se15m,
+              buyVolumeInUsd15m: this.formatScientificNotation(it.bviu15m),
+              sellVolumeInUsd15m: this.formatScientificNotation(it.sviu15m),
+              price15m: this.formatScientificNotation(it.p15m),
+              buys30m: it.b30m,
+              sells30m: it.s30m,
+              buyers30m: it.be30m,
+              sellers30m: it.se30m,
+              buyVolumeInUsd30m: this.formatScientificNotation(it.bviu30m),
+              sellVolumeInUsd30m: this.formatScientificNotation(it.sviu30m),
+              price30m: this.formatScientificNotation(it.p30m),
+              buys1h: it.b1h,
+              sells1h: it.s1h,
+              buyers1h: it.be1h,
+              sellers1h: it.se1h,
+              buyVolumeInUsd1h: this.formatScientificNotation(it.bviu1h),
+              sellVolumeInUsd1h: this.formatScientificNotation(it.sviu1h),
+              price1h: this.formatScientificNotation(it.p1h),
+              buys4h: it.b4h,
+              sells4h: it.s4h,
+              buyers4h: it.be4h,
+              sellers4h: it.se4h,
+              buyVolumeInUsd4h: this.formatScientificNotation(it.bviu4h),
+              sellVolumeInUsd4h: this.formatScientificNotation(it.sviu4h),
+              price4h: this.formatScientificNotation(it.p4h),
+              buys24h: it.b24h,
+              sells24h: it.s24h,
+              buyers24h: it.be24h,
+              sellers24h: it.se24h,
+              buyVolumeInUsd24h: this.formatScientificNotation(it.bviu24h),
+              sellVolumeInUsd24h: this.formatScientificNotation(it.sviu24h),
+              price24h: this.formatScientificNotation(it.p24h),
+              price: this.formatScientificNotation(it.p),
+            }) as TokenStat
+        )
+      )
     );
   }
 
@@ -307,64 +383,69 @@ export class StreamApi {
     callback,
   }: {
     chain: string;
-    callback: (data: TokenStat) => void;
+    callback: (data: TokenStat[]) => void;
   }): Unsubscrible {
     const channel = `dex-ranking-new-tokens-stats:${chain}`;
-    return this.subscribe(channel, (data: any) =>
-      callback({
-        address: data.a,
-        timestamp: data.t,
-        buys1m: data.b1m,
-        sells1m: data.s1m,
-        buyers1m: data.be1m,
-        sellers1m: data.se1m,
-        buyVolumeInUsd1m: this.formatScientificNotation(data.bviu1m),
-        sellVolumeInUsd1m: this.formatScientificNotation(data.sviu1m),
-        price1m: this.formatScientificNotation(data.p1m),
-        buys5m: data.b5m,
-        sells5m: data.s5m,
-        buyers5m: data.be5m,
-        sellers5m: data.se5m,
-        buyVolumeInUsd5m: this.formatScientificNotation(data.bviu5m),
-        sellVolumeInUsd5m: this.formatScientificNotation(data.sviu5m),
-        price5m: this.formatScientificNotation(data.p5m),
-        buys15m: data.b15m,
-        sells15m: data.s15m,
-        buyers15m: data.be15m,
-        sellers15m: data.se15m,
-        buyVolumeInUsd15m: this.formatScientificNotation(data.bviu15m),
-        sellVolumeInUsd15m: this.formatScientificNotation(data.sviu15m),
-        price15m: this.formatScientificNotation(data.p15m),
-        buys30m: data.b30m,
-        sells30m: data.s30m,
-        buyers30m: data.be30m,
-        sellers30m: data.se30m,
-        buyVolumeInUsd30m: this.formatScientificNotation(data.bviu30m),
-        sellVolumeInUsd30m: this.formatScientificNotation(data.sviu30m),
-        price30m: this.formatScientificNotation(data.p30m),
-        buys1h: data.b1h,
-        sells1h: data.s1h,
-        buyers1h: data.be1h,
-        sellers1h: data.se1h,
-        buyVolumeInUsd1h: this.formatScientificNotation(data.bviu1h),
-        sellVolumeInUsd1h: this.formatScientificNotation(data.sviu1h),
-        price1h: this.formatScientificNotation(data.p1h),
-        buys4h: data.b4h,
-        sells4h: data.s4h,
-        buyers4h: data.be4h,
-        sellers4h: data.se4h,
-        buyVolumeInUsd4h: this.formatScientificNotation(data.bviu4h),
-        sellVolumeInUsd4h: this.formatScientificNotation(data.sviu4h),
-        price4h: this.formatScientificNotation(data.p4h),
-        buys24h: data.b24h,
-        sells24h: data.s24h,
-        buyers24h: data.be24h,
-        sellers24h: data.se24h,
-        buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
-        sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
-        price24h: this.formatScientificNotation(data.p24h),
-        price: this.formatScientificNotation(data.p),
-      } as TokenStat)
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              address: it.a,
+              timestamp: it.t,
+              buys1m: it.b1m,
+              sells1m: it.s1m,
+              buyers1m: it.be1m,
+              sellers1m: it.se1m,
+              buyVolumeInUsd1m: this.formatScientificNotation(it.bviu1m),
+              sellVolumeInUsd1m: this.formatScientificNotation(it.sviu1m),
+              price1m: this.formatScientificNotation(it.p1m),
+              buys5m: it.b5m,
+              sells5m: it.s5m,
+              buyers5m: it.be5m,
+              sellers5m: it.se5m,
+              buyVolumeInUsd5m: this.formatScientificNotation(it.bviu5m),
+              sellVolumeInUsd5m: this.formatScientificNotation(it.sviu5m),
+              price5m: this.formatScientificNotation(it.p5m),
+              buys15m: it.b15m,
+              sells15m: it.s15m,
+              buyers15m: it.be15m,
+              sellers15m: it.se15m,
+              buyVolumeInUsd15m: this.formatScientificNotation(it.bviu15m),
+              sellVolumeInUsd15m: this.formatScientificNotation(it.sviu15m),
+              price15m: this.formatScientificNotation(it.p15m),
+              buys30m: it.b30m,
+              sells30m: it.s30m,
+              buyers30m: it.be30m,
+              sellers30m: it.se30m,
+              buyVolumeInUsd30m: this.formatScientificNotation(it.bviu30m),
+              sellVolumeInUsd30m: this.formatScientificNotation(it.sviu30m),
+              price30m: this.formatScientificNotation(it.p30m),
+              buys1h: it.b1h,
+              sells1h: it.s1h,
+              buyers1h: it.be1h,
+              sellers1h: it.se1h,
+              buyVolumeInUsd1h: this.formatScientificNotation(it.bviu1h),
+              sellVolumeInUsd1h: this.formatScientificNotation(it.sviu1h),
+              price1h: this.formatScientificNotation(it.p1h),
+              buys4h: it.b4h,
+              sells4h: it.s4h,
+              buyers4h: it.be4h,
+              sellers4h: it.se4h,
+              buyVolumeInUsd4h: this.formatScientificNotation(it.bviu4h),
+              sellVolumeInUsd4h: this.formatScientificNotation(it.sviu4h),
+              price4h: this.formatScientificNotation(it.p4h),
+              buys24h: it.b24h,
+              sells24h: it.s24h,
+              buyers24h: it.be24h,
+              sellers24h: it.se24h,
+              buyVolumeInUsd24h: this.formatScientificNotation(it.bviu24h),
+              sellVolumeInUsd24h: this.formatScientificNotation(it.sviu24h),
+              price24h: this.formatScientificNotation(it.p24h),
+              price: this.formatScientificNotation(it.p),
+            }) as TokenStat
+        )
+      )
     );
   }
 
@@ -649,7 +730,7 @@ class StreamUnsubscrible<T> {
     private readonly streamApi: StreamApi,
     private readonly channel: string,
     private readonly fn: (data: T) => void
-  ) {}
+  ) { }
 
   unsubscribe() {
     this.streamApi.unsubscribe(this.channel, this.fn);
