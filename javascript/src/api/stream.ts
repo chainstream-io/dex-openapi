@@ -505,18 +505,114 @@ export class StreamApi {
     );
   }
 
-  // subscribeTokenActivities({
-  //   chain,
-  //   tokenAddress,
-  //   callback,
-  // }: {
-  //   chain: string;
-  //   tokenAddress: string;
-  //   callback: (data: TokenActivity[]) => void;
-  // }): Unsubscrible {
-  //   const channel = `dex-token-activities:${chain}_${tokenAddress}`;
-  //   return this.subscribe(channel, callback);
-  // }
+  subscribeTokenHolders({
+    chain,
+    tokenAddress,
+    callback,
+  }: {
+    chain: string;
+    tokenAddress: string;
+    callback: (data: TokenHolder) => void;
+  }): Unsubscrible {
+    const channel = `dex-token-holding:${chain}_${tokenAddress}`;
+    return this.subscribe(channel, (data: any) => {
+      callback({
+        tokenAddress: data.a,
+        holders: data.h,
+        top100Amount: this.formatScientificNotation(data.t100a),
+        top10Amount: this.formatScientificNotation(data.t10a),
+        top100Holders: data.t100h,
+        top10Holders: data.t10h,
+        top100Ratio: this.formatScientificNotation(data.t100r),
+        top10Ratio: this.formatScientificNotation(data.t10r),
+        timestamp: data.ts,
+      });
+    });
+  }
+
+  subscribeNewTokenHolders({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenHolder[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-new-tokens-holding:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              holders: it.h,
+              top100Amount: this.formatScientificNotation(it.t100a),
+              top10Amount: this.formatScientificNotation(it.t10a),
+              top100Holders: it.t100h,
+              top10Holders: it.t10h,
+              top100Ratio: this.formatScientificNotation(it.t100r),
+              top10Ratio: this.formatScientificNotation(it.t10r),
+              timestamp: it.ts,
+            }) as TokenHolder
+        )
+      )
+    );
+  }
+
+  subscribeHotTokenHolders({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenHolder[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-trending-tokens-holding:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              holders: it.h,
+              top100Amount: this.formatScientificNotation(it.t100a),
+              top10Amount: this.formatScientificNotation(it.t10a),
+              top100Holders: it.t100h,
+              top10Holders: it.t10h,
+              top100Ratio: this.formatScientificNotation(it.t100r),
+              top10Ratio: this.formatScientificNotation(it.t10r),
+              timestamp: it.ts,
+            }) as TokenHolder
+        )
+      )
+    );
+  }
+
+  subscribeUsStocksTokenHolders({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenHolder[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-us-stocks-tokens-holding:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              holders: it.h,
+              top100Amount: this.formatScientificNotation(it.t100a),
+              top10Amount: this.formatScientificNotation(it.t10a),
+              top100Holders: it.t100h,
+              top10Holders: it.t10h,
+              top100Ratio: this.formatScientificNotation(it.t100r),
+              top10Ratio: this.formatScientificNotation(it.t10r),
+              timestamp: it.ts,
+            }) as TokenHolder
+        )
+      )
+    );
+  }
 
   subscribeTokenTrades({
     chain,
@@ -676,25 +772,6 @@ export class StreamApi {
     );
   }
 
-  subscribeTokenHolders({
-    chain,
-    tokenAddress,
-    callback,
-  }: {
-    chain: string;
-    tokenAddress: string;
-    callback: (data: TokenHolder) => void;
-  }): Unsubscrible {
-    const channel = `dex-token-general-stat-num:${chain}_${tokenAddress}`;
-    return this.subscribe(channel, (data: any) =>
-      callback({
-        tokenAddress: data.a,
-        holders: data.v,
-        timestamp: data.ts,
-      })
-    );
-  }
-
   subscribeTokenSupply({
     chain,
     tokenAddress,
@@ -712,6 +789,75 @@ export class StreamApi {
         marketCapInUsd: data.mc,
         timestamp: data.ts,
       })
+    );
+  }
+
+  subscribeNewTokenSupply({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenSupply[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-new-tokens-supply:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              supply: it.s,
+              marketCapInUsd: it.mc,
+              timestamp: it.ts,
+            }) as TokenSupply
+        )
+      )
+    );
+  }
+
+  subscribeHotTokenSupply({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenSupply[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-trending-tokens-supply:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              supply: it.s,
+              marketCapInUsd: it.mc,
+              timestamp: it.ts,
+            }) as TokenSupply
+        )
+      )
+    );
+  }
+
+  subscribeUsStocksTokenSupply({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenSupply[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-us-stocks-tokens-supply:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              supply: it.s,
+              marketCapInUsd: it.mc,
+              timestamp: it.ts,
+            }) as TokenSupply
+        )
+      )
     );
   }
 
@@ -753,6 +899,75 @@ export class StreamApi {
         value: data.v,
         timestamp: data.ts,
       })
+    );
+  }
+
+  subscribeNewTokenLiquidity({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenLiquidity[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-new-tokens-general-stat-num:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              metricType: it.t,
+              value: it.v,
+              timestamp: it.ts,
+            }) as TokenLiquidity
+        )
+      )
+    );
+  }
+
+  subscribeHotTokenLiquidity({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenLiquidity[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-trending-tokens-general-stat-num:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              metricType: it.t,
+              value: it.v,
+              timestamp: it.ts,
+            }) as TokenLiquidity
+        )
+      )
+    );
+  }
+
+  subscribeUsStocksTokenLiquidity({
+    chain,
+    callback,
+  }: {
+    chain: string;
+    callback: (data: TokenLiquidity[]) => void;
+  }): Unsubscrible {
+    const channel = `dex-ranking-us-stocks-tokens-general-stat-num:${chain}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map(
+          (it: any) =>
+            ({
+              tokenAddress: it.a,
+              metricType: it.t,
+              value: it.v,
+              timestamp: it.ts,
+            }) as TokenLiquidity
+        )
+      )
     );
   }
 

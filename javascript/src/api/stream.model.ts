@@ -97,6 +97,12 @@ export interface TokenStat {
 export interface TokenHolder {
   tokenAddress: string;
   holders: number;
+  top100Amount: string;
+  top10Amount: string;
+  top100Holders: number;
+  top10Holders: number;
+  top100Ratio: string;
+  top10Ratio: string;
   timestamp: number;
 }
 
