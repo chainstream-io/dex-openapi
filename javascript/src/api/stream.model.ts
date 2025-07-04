@@ -29,6 +29,8 @@ export interface TokenStat {
   buyVolumeInUsd1m: string;
   sellVolumeInUsd1m: string;
   price1m: string;
+  openInUsd1m: string;
+  closeInUsd1m: string;
 
   buys5m: number;
   sells5m: number;
@@ -37,6 +39,8 @@ export interface TokenStat {
   buyVolumeInUsd5m: string;
   sellVolumeInUsd5m: string;
   price5m: string;
+  openInUsd5m: string;
+  closeInUsd5m: string;
 
   buys15m: number;
   sells15m: number;
@@ -45,6 +49,8 @@ export interface TokenStat {
   buyVolumeInUsd15m: string;
   sellVolumeInUsd15m: string;
   price15m: string;
+  openInUsd15m: string;
+  closeInUsd15m: string;
 
   buys30m: number;
   sells30m: number;
@@ -53,6 +59,8 @@ export interface TokenStat {
   buyVolumeInUsd30m: string;
   sellVolumeInUsd30m: string;
   price30m: string;
+  openInUsd30m: string;
+  closeInUsd30m: string;
 
   buys1h: number;
   sells1h: number;
@@ -61,6 +69,8 @@ export interface TokenStat {
   buyVolumeInUsd1h: string;
   sellVolumeInUsd1h: string;
   price1h: string;
+  openInUsd1h: string;
+  closeInUsd1h: string;
 
   buys4h: number;
   sells4h: number;
@@ -69,6 +79,8 @@ export interface TokenStat {
   buyVolumeInUsd4h: string;
   sellVolumeInUsd4h: string;
   price4h: string;
+  openInUsd4h: string;
+  closeInUsd4h: string;
 
   buys24h: number;
   sells24h: number;
@@ -78,6 +90,8 @@ export interface TokenStat {
   sellVolumeInUsd24h: string;
   price24h: string;
   price: string;
+  openInUsd24h: string;
+  closeInUsd24h: string;
 }
 
 export interface TokenHolder {
