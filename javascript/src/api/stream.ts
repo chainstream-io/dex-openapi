@@ -11,6 +11,7 @@ import {
   WalletBalance,
   TokenSupply,
   WalletPnl,
+  ChannelType,
 } from "./stream.model";
 
 export interface Unsubscrible {
@@ -250,184 +251,16 @@ export class StreamApi {
     );
   }
 
-  subscribeHotTokenStats({
+  subscribeRankingTokensStats({
     chain,
+    channelType,
     callback,
   }: {
     chain: string;
+    channelType: ChannelType;
     callback: (data: TokenStat[]) => void;
   }): Unsubscrible {
-    const channel = `dex-ranking-trending-tokens-stats:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              address: it.a,
-              timestamp: it.t,
-              buys1m: it.b1m,
-              sells1m: it.s1m,
-              buyers1m: it.be1m,
-              sellers1m: it.se1m,
-              buyVolumeInUsd1m: this.formatScientificNotation(it.bviu1m),
-              sellVolumeInUsd1m: this.formatScientificNotation(it.sviu1m),
-              price1m: this.formatScientificNotation(it.p1m),
-              openInUsd1m: this.formatScientificNotation(it.oiu1m),
-              closeInUsd1m: this.formatScientificNotation(it.ciu1m),
-              buys5m: it.b5m,
-              sells5m: it.s5m,
-              buyers5m: it.be5m,
-              sellers5m: it.se5m,
-              buyVolumeInUsd5m: this.formatScientificNotation(it.bviu5m),
-              sellVolumeInUsd5m: this.formatScientificNotation(it.sviu5m),
-              price5m: this.formatScientificNotation(it.p5m),
-              openInUsd5m: this.formatScientificNotation(it.oiu5m),
-              closeInUsd5m: this.formatScientificNotation(it.ciu5m),
-              buys15m: it.b15m,
-              sells15m: it.s15m,
-              buyers15m: it.be15m,
-              sellers15m: it.se15m,
-              buyVolumeInUsd15m: this.formatScientificNotation(it.bviu15m),
-              sellVolumeInUsd15m: this.formatScientificNotation(it.sviu15m),
-              price15m: this.formatScientificNotation(it.p15m),
-              openInUsd15m: this.formatScientificNotation(it.oiu15m),
-              closeInUsd15m: this.formatScientificNotation(it.ciu15m),
-              buys30m: it.b30m,
-              sells30m: it.s30m,
-              buyers30m: it.be30m,
-              sellers30m: it.se30m,
-              buyVolumeInUsd30m: this.formatScientificNotation(it.bviu30m),
-              sellVolumeInUsd30m: this.formatScientificNotation(it.sviu30m),
-              price30m: this.formatScientificNotation(it.p30m),
-              openInUsd30m: this.formatScientificNotation(it.oiu30m),
-              closeInUsd30m: this.formatScientificNotation(it.ciu30m),
-              buys1h: it.b1h,
-              sells1h: it.s1h,
-              buyers1h: it.be1h,
-              sellers1h: it.se1h,
-              buyVolumeInUsd1h: this.formatScientificNotation(it.bviu1h),
-              sellVolumeInUsd1h: this.formatScientificNotation(it.sviu1h),
-              price1h: this.formatScientificNotation(it.p1h),
-              openInUsd1h: this.formatScientificNotation(it.oiu1h),
-              closeInUsd1h: this.formatScientificNotation(it.ciu1h),
-              buys4h: it.b4h,
-              sells4h: it.s4h,
-              buyers4h: it.be4h,
-              sellers4h: it.se4h,
-              buyVolumeInUsd4h: this.formatScientificNotation(it.bviu4h),
-              sellVolumeInUsd4h: this.formatScientificNotation(it.sviu4h),
-              price4h: this.formatScientificNotation(it.p4h),
-              openInUsd4h: this.formatScientificNotation(it.oiu4h),
-              closeInUsd4h: this.formatScientificNotation(it.ciu4h),
-              buys24h: it.b24h,
-              sells24h: it.s24h,
-              buyers24h: it.be24h,
-              sellers24h: it.se24h,
-              buyVolumeInUsd24h: this.formatScientificNotation(it.bviu24h),
-              sellVolumeInUsd24h: this.formatScientificNotation(it.sviu24h),
-              price24h: this.formatScientificNotation(it.p24h),
-              price: this.formatScientificNotation(it.p),
-              openInUsd24h: this.formatScientificNotation(it.oiu24h),
-              closeInUsd24h: this.formatScientificNotation(it.ciu24h),
-            }) as TokenStat
-        )
-      )
-    );
-  }
-
-  subscribeUsStocksTokenStats({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenStat[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-us-stocks-tokens-stats:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              address: it.a,
-              timestamp: it.t,
-              buys1m: it.b1m,
-              sells1m: it.s1m,
-              buyers1m: it.be1m,
-              sellers1m: it.se1m,
-              buyVolumeInUsd1m: this.formatScientificNotation(it.bviu1m),
-              sellVolumeInUsd1m: this.formatScientificNotation(it.sviu1m),
-              price1m: this.formatScientificNotation(it.p1m),
-              openInUsd1m: this.formatScientificNotation(it.oiu1m),
-              closeInUsd1m: this.formatScientificNotation(it.ciu1m),
-              buys5m: it.b5m,
-              sells5m: it.s5m,
-              buyers5m: it.be5m,
-              sellers5m: it.se5m,
-              buyVolumeInUsd5m: this.formatScientificNotation(it.bviu5m),
-              sellVolumeInUsd5m: this.formatScientificNotation(it.sviu5m),
-              price5m: this.formatScientificNotation(it.p5m),
-              openInUsd5m: this.formatScientificNotation(it.oiu5m),
-              closeInUsd5m: this.formatScientificNotation(it.ciu5m),
-              buys15m: it.b15m,
-              sells15m: it.s15m,
-              buyers15m: it.be15m,
-              sellers15m: it.se15m,
-              buyVolumeInUsd15m: this.formatScientificNotation(it.bviu15m),
-              sellVolumeInUsd15m: this.formatScientificNotation(it.sviu15m),
-              price15m: this.formatScientificNotation(it.p15m),
-              openInUsd15m: this.formatScientificNotation(it.oiu15m),
-              closeInUsd15m: this.formatScientificNotation(it.ciu15m),
-              buys30m: it.b30m,
-              sells30m: it.s30m,
-              buyers30m: it.be30m,
-              sellers30m: it.se30m,
-              buyVolumeInUsd30m: this.formatScientificNotation(it.bviu30m),
-              sellVolumeInUsd30m: this.formatScientificNotation(it.sviu30m),
-              price30m: this.formatScientificNotation(it.p30m),
-              openInUsd30m: this.formatScientificNotation(it.oiu30m),
-              closeInUsd30m: this.formatScientificNotation(it.ciu30m),
-              buys1h: it.b1h,
-              sells1h: it.s1h,
-              buyers1h: it.be1h,
-              sellers1h: it.se1h,
-              buyVolumeInUsd1h: this.formatScientificNotation(it.bviu1h),
-              sellVolumeInUsd1h: this.formatScientificNotation(it.sviu1h),
-              price1h: this.formatScientificNotation(it.p1h),
-              openInUsd1h: this.formatScientificNotation(it.oiu1h),
-              closeInUsd1h: this.formatScientificNotation(it.ciu1h),
-              buys4h: it.b4h,
-              sells4h: it.s4h,
-              buyers4h: it.be4h,
-              sellers4h: it.se4h,
-              buyVolumeInUsd4h: this.formatScientificNotation(it.bviu4h),
-              sellVolumeInUsd4h: this.formatScientificNotation(it.sviu4h),
-              price4h: this.formatScientificNotation(it.p4h),
-              openInUsd4h: this.formatScientificNotation(it.oiu4h),
-              closeInUsd4h: this.formatScientificNotation(it.ciu4h),
-              buys24h: it.b24h,
-              sells24h: it.s24h,
-              buyers24h: it.be24h,
-              sellers24h: it.se24h,
-              buyVolumeInUsd24h: this.formatScientificNotation(it.bviu24h),
-              sellVolumeInUsd24h: this.formatScientificNotation(it.sviu24h),
-              price24h: this.formatScientificNotation(it.p24h),
-              price: this.formatScientificNotation(it.p),
-              openInUsd24h: this.formatScientificNotation(it.oiu24h),
-              closeInUsd24h: this.formatScientificNotation(it.ciu24h),
-            }) as TokenStat
-        )
-      )
-    );
-  }
-
-  subscribeNewTokenStats({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenStat[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-new-tokens-stats:${chain}`;
+    const channel = `dex-ranking-token-stats-list:${chain}_${channelType}`;
     return this.subscribe(channel, (data: any[]) =>
       callback(
         data?.map(
@@ -530,70 +363,16 @@ export class StreamApi {
     });
   }
 
-  subscribeNewTokenHolders({
+  subscribeRankingTokensHolders({
     chain,
+    channelType,
     callback,
   }: {
     chain: string;
+    channelType: ChannelType;
     callback: (data: TokenHolder[]) => void;
   }): Unsubscrible {
-    const channel = `dex-ranking-new-tokens-holding:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              tokenAddress: it.a,
-              holders: it.h,
-              top100Amount: this.formatScientificNotation(it.t100a),
-              top10Amount: this.formatScientificNotation(it.t10a),
-              top100Holders: it.t100h,
-              top10Holders: it.t10h,
-              top100Ratio: this.formatScientificNotation(it.t100r),
-              top10Ratio: this.formatScientificNotation(it.t10r),
-              timestamp: it.ts,
-            }) as TokenHolder
-        )
-      )
-    );
-  }
-
-  subscribeHotTokenHolders({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenHolder[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-trending-tokens-holding:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              tokenAddress: it.a,
-              holders: it.h,
-              top100Amount: this.formatScientificNotation(it.t100a),
-              top10Amount: this.formatScientificNotation(it.t10a),
-              top100Holders: it.t100h,
-              top10Holders: it.t10h,
-              top100Ratio: this.formatScientificNotation(it.t100r),
-              top10Ratio: this.formatScientificNotation(it.t10r),
-              timestamp: it.ts,
-            }) as TokenHolder
-        )
-      )
-    );
-  }
-
-  subscribeUsStocksTokenHolders({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenHolder[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-us-stocks-tokens-holding:${chain}`;
+    const channel = `dex-ranking-token-holding-list:${chain}_${channelType}`;
     return this.subscribe(channel, (data: any[]) =>
       callback(
         data?.map(
@@ -792,60 +571,16 @@ export class StreamApi {
     );
   }
 
-  subscribeNewTokenSupply({
+  subscribeRankingTokensSupply({
     chain,
+    channelType,
     callback,
   }: {
     chain: string;
+    channelType: ChannelType;
     callback: (data: TokenSupply[]) => void;
   }): Unsubscrible {
-    const channel = `dex-ranking-new-tokens-supply:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              tokenAddress: it.a,
-              supply: it.s,
-              marketCapInUsd: it.mc,
-              timestamp: it.ts,
-            }) as TokenSupply
-        )
-      )
-    );
-  }
-
-  subscribeHotTokenSupply({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenSupply[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-trending-tokens-supply:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              tokenAddress: it.a,
-              supply: it.s,
-              marketCapInUsd: it.mc,
-              timestamp: it.ts,
-            }) as TokenSupply
-        )
-      )
-    );
-  }
-
-  subscribeUsStocksTokenSupply({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenSupply[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-us-stocks-tokens-supply:${chain}`;
+    const channel = `dex-ranking-token-supply-list:${chain}_${channelType}`;
     return this.subscribe(channel, (data: any[]) =>
       callback(
         data?.map(
@@ -902,60 +637,16 @@ export class StreamApi {
     );
   }
 
-  subscribeNewTokenLiquidity({
+  subscribeRankingTokensLiquidity({
     chain,
+    channelType,
     callback,
   }: {
     chain: string;
+    channelType: ChannelType;
     callback: (data: TokenLiquidity[]) => void;
   }): Unsubscrible {
-    const channel = `dex-ranking-new-tokens-general-stat-num:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              tokenAddress: it.a,
-              metricType: it.t,
-              value: it.v,
-              timestamp: it.ts,
-            }) as TokenLiquidity
-        )
-      )
-    );
-  }
-
-  subscribeHotTokenLiquidity({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenLiquidity[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-trending-tokens-general-stat-num:${chain}`;
-    return this.subscribe(channel, (data: any[]) =>
-      callback(
-        data?.map(
-          (it: any) =>
-            ({
-              tokenAddress: it.a,
-              metricType: it.t,
-              value: it.v,
-              timestamp: it.ts,
-            }) as TokenLiquidity
-        )
-      )
-    );
-  }
-
-  subscribeUsStocksTokenLiquidity({
-    chain,
-    callback,
-  }: {
-    chain: string;
-    callback: (data: TokenLiquidity[]) => void;
-  }): Unsubscrible {
-    const channel = `dex-ranking-us-stocks-tokens-general-stat-num:${chain}`;
+    const channel = `dex-ranking-token-general_stat_num-list:${chain}_${channelType}`;
     return this.subscribe(channel, (data: any[]) =>
       callback(
         data?.map(

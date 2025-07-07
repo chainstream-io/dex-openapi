@@ -9,6 +9,14 @@ export enum TokenActivityType {
   RemoveLiquidity = "remove_liquidity",
 }
 
+export enum ChannelType {
+  New = "new",
+  HOT = "trending",
+  US_STOCKS = "us_stocks",
+  COMPLETED = "completed",
+  GRADUATED = "graduated",
+}
+
 export interface TokenActivity {
   address: string;
   priceUsd: string;
