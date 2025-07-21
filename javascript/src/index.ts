@@ -17,6 +17,7 @@ import {
   Middleware,
   BearerAuthentication,
   RedPacketApi,
+  IpfsApi,
 } from "./openapi";
 import { EventSourcePolyfill } from "event-source-polyfill";
 
@@ -36,7 +37,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.80";
+export const LIB_VERSION = "0.0.84";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
@@ -63,6 +64,7 @@ export class DexClient {
   public readonly pumpfun: DefiSolanaPumpfunApi;
   public readonly stream: StreamApi;
   public readonly redPacket: RedPacketApi;
+  public readonly ipfs: IpfsApi;
   public constructor(
     accessToken: string | TokenProvider,
     options: DexAggregatorOptions = {}
@@ -101,6 +103,7 @@ export class DexClient {
     this.stream = new StreamApi(this.requestCtx);
     this.wallet = new WalletApi(config);
     this.redPacket = new RedPacketApi(config);
+    this.ipfs = new IpfsApi(config);
     this.stream.connect();
   }
 
