@@ -1,4 +1,4 @@
-
+import { Resolution } from "../openapi";
 
 
 
@@ -118,6 +118,7 @@ export interface WalletBalance {
   walletAddress: string;
   tokenAddress: string;
   tokenPriceInUsd: string;
+  balance: string;
   timestamp: number;
 }
 
@@ -145,14 +146,12 @@ export interface NewToken {
   tokenAddress: string;
   name: string;
   symbol: string;
-  description: string;
   createdAtMs: number;
 }
 
 export interface TokenSupply {
   tokenAddress: string;
   supply: string;
-  marketCapInUsd: string;
   timestamp: number;
 }
 
@@ -195,4 +194,63 @@ export interface socialMedia {
   reddit: string;
   youtube: string;
   bitbucket: string;
+}
+
+export interface TokenCandle {
+  open: string;
+  close: string;
+  high: string;
+  low: string;
+  volume: string;
+  resolution: Resolution;
+  time: number;
+  number: number;
+}
+
+export interface TradeActivity {
+  tokenAddress: string;
+  timestamp: number;
+  kind: string;
+  buyAmount: string;
+  buyAmountInUsd: string;
+  buyTokenAddress: string;
+  buyTokenName: string;
+  buyTokenSymbol: string;
+  buyWalletAddress: string;
+  sellAmount: string;
+  sellAmountInUsd: string;
+  sellTokenAddress: string;
+  sellTokenName: string;
+  sellTokenSymbol: string;
+  sellWalletAddress: string;
+  txHash: string;
+}
+
+export interface WalletTokenPnl {
+  walletAddress: string;
+  tokenAddress: string;
+  tokenPriceInUsd: string;
+  timestamp: number;
+  opentime: number;
+  lasttime: number;
+  closetime: number;
+  buyAmount: string;
+  buyAmountInUsd: string;
+  buyCount: number;
+  buyCount30d: number;
+  buyCount7d: number;
+  sellAmount: string;
+  sellAmountInUsd: string;
+  sellCount: number;
+  sellCount30d: number;
+  sellCount7d: number;
+  heldDurationTimestamp: number;
+  averageBuyPriceInUsd: string;
+  averageSellPriceInUsd: string;
+  unrealizedProfitInUsd: string;
+  unrealizedProfitRatio: string;
+  realizedProfitInUsd: string;
+  realizedProfitRatio: string;
+  totalRealizedProfitInUsd: string;
+  totalRealizedProfitRatio: string;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@chainstream-io/dex",
-  "version": "0.0.95",
+  "version": "0.0.96",
   "description": "Dex API client and webhook verification library",
   "author": "AI",
   "repository": "https://github.com/chainstream-io/dex",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@stablelib/base64": "^1.0.0",
-    "centrifuge": "^5.3.2",
+    "@chainstream-io/centrifuge": "1.0.0",
     "whatwg-fetch": "^3.6.20",
     "es6-promise": "^4.2.8",
     "event-source-polyfill": "^1.0.31",
