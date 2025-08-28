@@ -54,6 +54,41 @@ export class StreamApi {
     this.realtimeClient.connect();
   }
 
+  /**
+   * Start batching commands for efficient bulk operations
+   * All subscription commands after this call will be batched until stopBatching is called
+   */
+  startBatching() {
+    this.realtimeClient.startBatching();
+  }
+
+  /**
+   * Stop batching and flush all collected commands to the server
+   * This will send all batched subscription commands in a single network request
+   */
+  stopBatching() {
+    this.realtimeClient.stopBatching();
+  }
+
+  /**
+   * Batch subscribe method that accepts a function containing subscription calls
+   * All subscription methods called within the function will be batched
+   * @param batchFunction Function containing subscription method calls
+   * @returns Array of unsubscribe functions
+   */
+  batchSubscribe(batchFunction: () => Unsubscrible[]): Unsubscrible[] {
+    // Start batching commands
+    this.startBatching();
+
+    // Execute the batch function (all subscription calls will be batched)
+    const unsubscribles = batchFunction();
+
+    // Stop batching and flush all commands
+    this.stopBatching();
+
+    return unsubscribles;
+  }
+
   subscribe<T = any>(channel: string, fn: (data: T) => void, filter?: string, methodName?: string): Unsubscrible {
     let sub = this.realtimeClient.getSubscription(channel);
     let listeners = this.listenersMap.get(channel);
