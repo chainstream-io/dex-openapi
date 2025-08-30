@@ -4,7 +4,7 @@ import { Resolution } from "../openapi";
 import {
   DexPoolBalance,
   NewToken,
-  NewTokenMetadata,
+  TokenMetadata,
   TokenHolder,
   TokenStat,
   TokenLiquidity,
@@ -15,6 +15,9 @@ import {
   TokenCandle,
   TradeActivity,
   WalletTokenPnl,
+  RankingType,
+  Dex,
+  RankingTokenList,
 } from "./stream.model";
 import { replaceFilterFields } from "./stream.fields";
 
@@ -274,9 +277,10 @@ export class StreamApi {
         buyVolumeInUsd24h: this.formatScientificNotation(data.bviu24h),
         sellVolumeInUsd24h: this.formatScientificNotation(data.sviu24h),
         price24h: this.formatScientificNotation(data.p24h),
-        price: this.formatScientificNotation(data.p),
         openInUsd24h: this.formatScientificNotation(data.oiu24h),
         closeInUsd24h: this.formatScientificNotation(data.ciu24h),
+        
+        price: this.formatScientificNotation(data.p),
       }), filter, "subscribeTokenStats");
   }
 
@@ -599,7 +603,7 @@ export class StreamApi {
     callback,
   }: {
     chain: string;
-    callback: (data: NewTokenMetadata[]) => void;
+    callback: (data: TokenMetadata[]) => void;
   }): Unsubscrible {
     const channel = `dex-new-tokens-metadata:${chain}`;
     return this.subscribe(channel, (data: any[]) =>
@@ -612,23 +616,25 @@ export class StreamApi {
               symbol: it.s,
               imageUrl: it.iu,
               description: it.de,
-              socialMedia: {
-                twitter: it.sm?.tw || "",
-                telegram: it.sm?.tg || "",
-                website: it.sm?.w || "",
-                tiktok: it.sm?.tt || "",
-                discord: it.sm?.dc || "",
-                facebook: it.sm?.fb || "",
-                github: it.sm?.gh || "",
-                instagram: it.sm?.ig || "",
-                linkedin: it.sm?.li || "",
-                medium: it.sm?.md || "",
-                reddit: it.sm?.rd || "",
-                youtube: it.sm?.yt || "",
-                bitbucket: it.sm?.bb || "",
-              },
+              socialMedia: (() => {
+                const socialMedia: any = {};
+                if (it.sm?.tw) {socialMedia.twitter = it.sm.tw}
+                if (it.sm?.tg) {socialMedia.telegram = it.sm.tg}
+                if (it.sm?.w) {socialMedia.website = it.sm.w}
+                if (it.sm?.tt) {socialMedia.tiktok = it.sm.tt}
+                if (it.sm?.dc) {socialMedia.discord = it.sm.dc}
+                if (it.sm?.fb) {socialMedia.facebook = it.sm.fb}
+                if (it.sm?.gh) {socialMedia.github = it.sm.gh}
+                if (it.sm?.ig) {socialMedia.instagram = it.sm.ig}
+                if (it.sm?.li) {socialMedia.linkedin = it.sm.li}
+                if (it.sm?.md) {socialMedia.medium = it.sm.md}
+                if (it.sm?.rd) {socialMedia.reddit = it.sm.rd}
+                if (it.sm?.yt) {socialMedia.youtube = it.sm.yt}
+                if (it.sm?.bb) {socialMedia.bitbucket = it.sm.bb}
+                return socialMedia;
+              })(),
               createdAtMs: it.cts,
-            }) as NewTokenMetadata
+            })
         )
       )
     );
@@ -693,6 +699,7 @@ export class StreamApi {
       callback({
         tokenAddress: data.a,
         supply: data.s,
+        marketCapInUsd: data.mc,
         timestamp: data.ts,
       }), filter, "subscribeTokenSupply");
   }
@@ -716,7 +723,7 @@ export class StreamApi {
               supply: it.s,
               marketCapInUsd: it.mc,
               timestamp: it.ts,
-            }) as TokenSupply
+            })
         )
       )
     );
@@ -785,6 +792,164 @@ export class StreamApi {
               timestamp: it.ts,
             }) as TokenLiquidity
         )
+      )
+    );
+  }
+
+  subscribeRankingTokensList({
+    chain,
+    ranking_type,
+    dex,
+    callback,
+  }: {
+    chain: string;
+    ranking_type: RankingType;
+    dex?: Dex;
+    callback: (data: RankingTokenList[]) => void;
+  }): Unsubscrible {
+    const channel = dex 
+      ? `dex-ranking-list:${chain}_${ranking_type}_${dex}`
+      : `dex-ranking-list:${chain}_${ranking_type}`;
+    return this.subscribe(channel, (data: any[]) =>
+      callback(
+        data?.map((item: any) => {
+          const result: RankingTokenList = {} as RankingTokenList;
+
+          // TokenMetadata (t)
+          if (item.t) {
+            result.tokenAddress = item.t.a;
+            if (item.t.n) {result.name = item.t.n}
+            if (item.t.s) {result.symbol = item.t.s}
+            if (item.t.iu) {result.imageUrl = item.t.iu}
+            if (item.t.de) {result.description = item.t.de}
+            if (item.t.sm) {
+              result.socialMedia = {};
+              if (item.t.sm.tw) {result.socialMedia.twitter = item.t.sm.tw}
+              if (item.t.sm.tg) {result.socialMedia.telegram = item.t.sm.tg}
+              if (item.t.sm.w) {result.socialMedia.website = item.t.sm.w}
+              if (item.t.sm.tt) {result.socialMedia.tiktok = item.t.sm.tt}
+              if (item.t.sm.dc) {result.socialMedia.discord = item.t.sm.dc}
+              if (item.t.sm.fb) {result.socialMedia.facebook = item.t.sm.fb}
+              if (item.t.sm.gh) {result.socialMedia.github = item.t.sm.gh}
+              if (item.t.sm.ig) {result.socialMedia.instagram = item.t.sm.ig}
+              if (item.t.sm.li) {result.socialMedia.linkedin = item.t.sm.li}
+              if (item.t.sm.md) {result.socialMedia.medium = item.t.sm.md}
+              if (item.t.sm.rd) {result.socialMedia.reddit = item.t.sm.rd}
+              if (item.t.sm.yt) {result.socialMedia.youtube = item.t.sm.yt}
+              if (item.t.sm.bb) {result.socialMedia.bitbucket = item.t.sm.bb}
+            }
+            if (item.t.cts) {result.createdAtMs = item.t.cts}
+          }
+
+          // TokenHolder (h)
+          if (item.h) {
+            if (item.h.a) {result.tokenAddress = item.h.a}
+            if (item.h.h !== undefined) {result.holders = item.h.h}
+            if (item.h.t100a !== undefined) {result.top100Amount = this.formatScientificNotation(item.h.t100a)}
+            if (item.h.t10a !== undefined) {result.top10Amount = this.formatScientificNotation(item.h.t10a)}
+            if (item.h.t100h !== undefined) {result.top100Holders = item.h.t100h}
+            if (item.h.t10h !== undefined) {result.top10Holders = item.h.t10h}
+            if (item.h.t100r !== undefined) {result.top100Ratio = this.formatScientificNotation(item.h.t100r)}
+            if (item.h.t10r !== undefined) {result.top10Ratio = this.formatScientificNotation(item.h.t10r)}
+            if (item.h.ts !== undefined) {result.timestamp = item.h.ts}
+          }
+
+          // TokenSupply (s)
+          if (item.s) {
+            if (item.s.a) {result.tokenAddress = item.s.a}
+            if (item.s.s !== undefined) {result.supply = item.s.s}
+            if (item.s.mc !== undefined) {result.marketCapInUsd = item.s.mc}
+            if (item.s.ts !== undefined) {result.timestamp = item.s.ts}
+          }
+
+          // TokenStat (ts)
+          if (item.ts) {
+            if (item.ts.a) {result.address = item.ts.a}
+            if (item.ts.t !== undefined) {result.timestamp = item.ts.t}
+            
+            // 1m data
+            if (item.ts.b1m !== undefined) {result.buys1m = item.ts.b1m}
+            if (item.ts.s1m !== undefined) {result.sells1m = item.ts.s1m}
+            if (item.ts.be1m !== undefined) {result.buyers1m = item.ts.be1m}
+            if (item.ts.se1m !== undefined) {result.sellers1m = item.ts.se1m}
+            if (item.ts.bviu1m !== undefined) {result.buyVolumeInUsd1m = this.formatScientificNotation(item.ts.bviu1m)}
+            if (item.ts.sviu1m !== undefined) {result.sellVolumeInUsd1m = this.formatScientificNotation(item.ts.sviu1m)}
+            if (item.ts.p1m !== undefined) {result.price1m = this.formatScientificNotation(item.ts.p1m)}
+            if (item.ts.oiu1m !== undefined) {result.openInUsd1m = this.formatScientificNotation(item.ts.oiu1m)}
+            if (item.ts.ciu1m !== undefined) {result.closeInUsd1m = this.formatScientificNotation(item.ts.ciu1m)}
+
+            // 5m data
+            if (item.ts.b5m !== undefined) {result.buys5m = item.ts.b5m}
+            if (item.ts.s5m !== undefined) {result.sells5m = item.ts.s5m}
+            if (item.ts.be5m !== undefined) {result.buyers5m = item.ts.be5m}
+            if (item.ts.se5m !== undefined) {result.sellers5m = item.ts.se5m}
+            if (item.ts.bviu5m !== undefined) {result.buyVolumeInUsd5m = this.formatScientificNotation(item.ts.bviu5m)}
+            if (item.ts.sviu5m !== undefined) {result.sellVolumeInUsd5m = this.formatScientificNotation(item.ts.sviu5m)}
+            if (item.ts.p5m !== undefined) {result.price5m = this.formatScientificNotation(item.ts.p5m)}
+            if (item.ts.oiu5m !== undefined) {result.openInUsd5m = this.formatScientificNotation(item.ts.oiu5m)}
+            if (item.ts.ciu5m !== undefined) {result.closeInUsd5m = this.formatScientificNotation(item.ts.ciu5m)}
+
+            // 15m data
+            if (item.ts.b15m !== undefined) {result.buys15m = item.ts.b15m}
+            if (item.ts.s15m !== undefined) {result.sells15m = item.ts.s15m}
+            if (item.ts.be15m !== undefined) {result.buyers15m = item.ts.be15m}
+            if (item.ts.se15m !== undefined) {result.sellers15m = item.ts.se15m}
+            if (item.ts.bviu15m !== undefined) {result.buyVolumeInUsd15m = this.formatScientificNotation(item.ts.bviu15m)}
+            if (item.ts.sviu15m !== undefined) {result.sellVolumeInUsd15m = this.formatScientificNotation(item.ts.sviu15m)}
+            if (item.ts.p15m !== undefined) {result.price15m = this.formatScientificNotation(item.ts.p15m)}
+            if (item.ts.oiu15m !== undefined) {result.openInUsd15m = this.formatScientificNotation(item.ts.oiu15m)}
+            if (item.ts.ciu15m !== undefined) {result.closeInUsd15m = this.formatScientificNotation(item.ts.ciu15m)}
+
+            // 30m data
+            if (item.ts.b30m !== undefined) {result.buys30m = item.ts.b30m}
+            if (item.ts.s30m !== undefined) {result.sells30m = item.ts.s30m}
+            if (item.ts.be30m !== undefined) {result.buyers30m = item.ts.be30m}
+            if (item.ts.se30m !== undefined) {result.sellers30m = item.ts.se30m}
+            if (item.ts.bviu30m !== undefined) {result.buyVolumeInUsd30m = this.formatScientificNotation(item.ts.bviu30m)}
+            if (item.ts.sviu30m !== undefined) {result.sellVolumeInUsd30m = this.formatScientificNotation(item.ts.sviu30m)}
+            if (item.ts.p30m !== undefined) {result.price30m = this.formatScientificNotation(item.ts.p30m)}
+            if (item.ts.oiu30m !== undefined) {result.openInUsd30m = this.formatScientificNotation(item.ts.oiu30m)}
+            if (item.ts.ciu30m !== undefined) {result.closeInUsd30m = this.formatScientificNotation(item.ts.ciu30m)}
+
+            // 1h data
+            if (item.ts.b1h !== undefined) {result.buys1h = item.ts.b1h}
+            if (item.ts.s1h !== undefined) {result.sells1h = item.ts.s1h}
+            if (item.ts.be1h !== undefined) {result.buyers1h = item.ts.be1h}
+            if (item.ts.se1h !== undefined) {result.sellers1h = item.ts.se1h}
+            if (item.ts.bviu1h !== undefined) {result.buyVolumeInUsd1h = this.formatScientificNotation(item.ts.bviu1h)}
+            if (item.ts.sviu1h !== undefined) {result.sellVolumeInUsd1h = this.formatScientificNotation(item.ts.sviu1h)}
+            if (item.ts.p1h !== undefined) {result.price1h = this.formatScientificNotation(item.ts.p1h)}
+            if (item.ts.oiu1h !== undefined) {result.openInUsd1h = this.formatScientificNotation(item.ts.oiu1h)}
+            if (item.ts.ciu1h !== undefined) {result.closeInUsd1h = this.formatScientificNotation(item.ts.ciu1h)}
+
+            // 4h data
+            if (item.ts.b4h !== undefined) {result.buys4h = item.ts.b4h}
+            if (item.ts.s4h !== undefined) {result.sells4h = item.ts.s4h}
+            if (item.ts.be4h !== undefined) {result.buyers4h = item.ts.be4h}
+            if (item.ts.se4h !== undefined) {result.sellers4h = item.ts.se4h}
+            if (item.ts.bviu4h !== undefined) {result.buyVolumeInUsd4h = this.formatScientificNotation(item.ts.bviu4h)}
+            if (item.ts.sviu4h !== undefined) {result.sellVolumeInUsd4h = this.formatScientificNotation(item.ts.sviu4h)}
+            if (item.ts.p4h !== undefined) {result.price4h = this.formatScientificNotation(item.ts.p4h)}
+            if (item.ts.oiu4h !== undefined) {result.openInUsd4h = this.formatScientificNotation(item.ts.oiu4h)}
+            if (item.ts.ciu4h !== undefined) {result.closeInUsd4h = this.formatScientificNotation(item.ts.ciu4h)}
+
+            // 24h data
+            if (item.ts.b24h !== undefined) {result.buys24h = item.ts.b24h}
+            if (item.ts.s24h !== undefined) {result.sells24h = item.ts.s24h}
+            if (item.ts.be24h !== undefined) {result.buyers24h = item.ts.be24h}
+            if (item.ts.se24h !== undefined) {result.sellers24h = item.ts.se24h}
+            if (item.ts.bviu24h !== undefined) {result.buyVolumeInUsd24h = this.formatScientificNotation(item.ts.bviu24h)}
+            if (item.ts.sviu24h !== undefined) {result.sellVolumeInUsd24h = this.formatScientificNotation(item.ts.sviu24h)}
+            if (item.ts.p24h !== undefined) {result.price24h = this.formatScientificNotation(item.ts.p24h)}
+            if (item.ts.oiu24h !== undefined) {result.openInUsd24h = this.formatScientificNotation(item.ts.oiu24h)}
+            if (item.ts.ciu24h !== undefined) {result.closeInUsd24h = this.formatScientificNotation(item.ts.ciu24h)}
+
+            // Current price
+            if (item.ts.p !== undefined) {result.price = this.formatScientificNotation(item.ts.p)}
+          }
+
+          return result;
+        })
       )
     );
   }

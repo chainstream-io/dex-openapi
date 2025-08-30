@@ -30,87 +30,88 @@ export interface TokenActivity {
 export interface TokenStat {
   address: string;
   timestamp: number;
-  buys1m: number;
-  sells1m: number;
-  buyers1m: number;
-  sellers1m: number;
-  buyVolumeInUsd1m: string;
-  sellVolumeInUsd1m: string;
-  price1m: string;
-  openInUsd1m: string;
-  closeInUsd1m: string;
+  buys1m?: number;
+  sells1m?: number;
+  buyers1m?: number;
+  sellers1m?: number;
+  buyVolumeInUsd1m?: string;
+  sellVolumeInUsd1m?: string;
+  price1m?: string;
+  openInUsd1m?: string;
+  closeInUsd1m?: string;
 
-  buys5m: number;
-  sells5m: number;
-  buyers5m: number;
-  sellers5m: number;
-  buyVolumeInUsd5m: string;
-  sellVolumeInUsd5m: string;
-  price5m: string;
-  openInUsd5m: string;
-  closeInUsd5m: string;
+  buys5m?: number;
+  sells5m?: number;
+  buyers5m?: number;
+  sellers5m?: number;
+  buyVolumeInUsd5m?: string;
+  sellVolumeInUsd5m?: string;
+  price5m?: string;
+  openInUsd5m?: string;
+  closeInUsd5m?: string;
 
-  buys15m: number;
-  sells15m: number;
-  buyers15m: number;
-  sellers15m: number;
-  buyVolumeInUsd15m: string;
-  sellVolumeInUsd15m: string;
-  price15m: string;
-  openInUsd15m: string;
-  closeInUsd15m: string;
+  buys15m?: number;
+  sells15m?: number;
+  buyers15m?: number;
+  sellers15m?: number;
+  buyVolumeInUsd15m?: string;
+  sellVolumeInUsd15m?: string;
+  price15m?: string;
+  openInUsd15m?: string;
+  closeInUsd15m?: string;
 
-  buys30m: number;
-  sells30m: number;
-  buyers30m: number;
-  sellers30m: number;
-  buyVolumeInUsd30m: string;
-  sellVolumeInUsd30m: string;
-  price30m: string;
-  openInUsd30m: string;
-  closeInUsd30m: string;
+  buys30m?: number;
+  sells30m?: number;
+  buyers30m?: number;
+  sellers30m?: number;
+  buyVolumeInUsd30m?: string;
+  sellVolumeInUsd30m?: string;
+  price30m?: string;
+  openInUsd30m?: string;
+  closeInUsd30m?: string;
 
-  buys1h: number;
-  sells1h: number;
-  buyers1h: number;
-  sellers1h: number;
-  buyVolumeInUsd1h: string;
-  sellVolumeInUsd1h: string;
-  price1h: string;
-  openInUsd1h: string;
-  closeInUsd1h: string;
+  buys1h?: number;
+  sells1h?: number;
+  buyers1h?: number;
+  sellers1h?: number;
+  buyVolumeInUsd1h?: string;
+  sellVolumeInUsd1h?: string;
+  price1h?: string;
+  openInUsd1h?: string;
+  closeInUsd1h?: string;
 
-  buys4h: number;
-  sells4h: number;
-  buyers4h: number;
-  sellers4h: number;
-  buyVolumeInUsd4h: string;
-  sellVolumeInUsd4h: string;
-  price4h: string;
-  openInUsd4h: string;
-  closeInUsd4h: string;
+  buys4h?: number;
+  sells4h?: number;
+  buyers4h?: number;
+  sellers4h?: number;
+  buyVolumeInUsd4h?: string;
+  sellVolumeInUsd4h?: string;
+  price4h?: string;
+  openInUsd4h?: string;
+  closeInUsd4h?: string;
 
-  buys24h: number;
-  sells24h: number;
-  buyers24h: number;
-  sellers24h: number;
-  buyVolumeInUsd24h: string;
-  sellVolumeInUsd24h: string;
-  price24h: string;
-  price: string;
-  openInUsd24h: string;
-  closeInUsd24h: string;
+  buys24h?: number;
+  sells24h?: number;
+  buyers24h?: number;
+  sellers24h?: number;
+  buyVolumeInUsd24h?: string;
+  sellVolumeInUsd24h?: string;
+  price24h?: string;
+  openInUsd24h?: string;
+  closeInUsd24h?: string;
+
+  price?: string;
 }
 
 export interface TokenHolder {
   tokenAddress: string;
-  holders: number;
-  top100Amount: string;
-  top10Amount: string;
-  top100Holders: number;
-  top10Holders: number;
-  top100Ratio: string;
-  top10Ratio: string;
+  holders?: number;
+  top100Amount?: string;
+  top10Amount?: string;
+  top100Holders?: number;
+  top10Holders?: number;
+  top100Ratio?: string;
+  top10Ratio?: string;
   timestamp: number;
 }
 
@@ -151,7 +152,8 @@ export interface NewToken {
 
 export interface TokenSupply {
   tokenAddress: string;
-  supply: string;
+  supply?: string;
+  marketCapInUsd?: string;
   timestamp: number;
 }
 
@@ -170,30 +172,30 @@ export interface TokenLiquidity {
   timestamp: number;
 }
 
-export interface NewTokenMetadata {
+export interface TokenMetadata {
   tokenAddress: string;
-  name: string;
-  symbol: string;
-  imageUrl: string;
-  description: string;
-  socialMedia: socialMedia;
-  createdAtMs: number;
+  name?: string;
+  symbol?: string;
+  imageUrl?: string;
+  description?: string;
+  socialMedia?: socialMedia;
+  createdAtMs?: number;
 }
 
 export interface socialMedia {
-  twitter: string;
-  telegram: string;
-  website: string;
-  tiktok: string;
-  discord: string;
-  facebook: string;
-  github: string;
-  instagram: string;
-  linkedin: string;
-  medium: string;
-  reddit: string;
-  youtube: string;
-  bitbucket: string;
+  twitter?: string;
+  telegram?: string;
+  website?: string;
+  tiktok?: string;
+  discord?: string;
+  facebook?: string;
+  github?: string;
+  instagram?: string;
+  linkedin?: string;
+  medium?: string;
+  reddit?: string;
+  youtube?: string;
+  bitbucket?: string;
 }
 
 export interface TokenCandle {
@@ -253,4 +255,24 @@ export interface WalletTokenPnl {
   realizedProfitRatio: string;
   totalRealizedProfitInUsd: string;
   totalRealizedProfitRatio: string;
+}
+
+export enum RankingType {
+  NEW = "new",
+  HOT = "trending",
+  STOCKS = "stocks",
+  FINALSTRETCH = "completed",
+  MIGRATED = "graduated",
+}
+
+export enum Dex {
+  PUMP_FUN = "pump_fun",
+  RAYDIUM_LAUNCHPAD = "raydium_launchpad",
+  METEOR_DYNAMIC_BOUNDING_CURVE = "meteora_dynamic_bounding_curve",
+  BONK_FUN = "bonk_fun",
+  BOOP_FUN = "boop_fun",
+  MOONIT_FUN = "moonit_fun",
+}
+
+export interface RankingTokenList extends TokenMetadata, TokenHolder, TokenSupply, TokenStat {
 }
