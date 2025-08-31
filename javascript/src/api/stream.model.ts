@@ -17,6 +17,11 @@ export enum ChannelType {
   GRADUATED = "graduated",
 }
 
+export enum MetricType {
+  LIQUIDITY_IN_USD = "liquidity_in_usd",
+  MIGRATED_RATIO = "migrated_ratio",
+}
+
 export interface TokenActivity {
   address: string;
   priceUsd: string;
@@ -167,7 +172,7 @@ export interface DexPoolBalance {
 
 export interface TokenLiquidity {
   tokenAddress: string;
-  metricType: string;
+  metricType: MetricType;
   value: string;
   timestamp: number;
 }
