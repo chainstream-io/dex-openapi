@@ -18,6 +18,8 @@ import {
   BearerAuthentication,
   RedPacketApi,
   IpfsApi,
+  WatchlistApi,
+  BlockchainApi,
 } from "./openapi";
 import { EventSourcePolyfill } from "event-source-polyfill";
 
@@ -37,7 +39,7 @@ export interface DexAggregatorOptions {
   streamUrl?: string;
 }
 
-export const LIB_VERSION = "0.0.2";
+export const LIB_VERSION = "0.0.3";
 
 class UserAgentMiddleware implements Middleware {
   public pre(context: RequestContext): Promise<RequestContext> {
@@ -65,6 +67,8 @@ export class DexClient {
   public readonly stream: StreamApi;
   public readonly redPacket: RedPacketApi;
   public readonly ipfs: IpfsApi;
+  public readonly blockchain: BlockchainApi;
+  public readonly watchlist: WatchlistApi;
   public constructor(
     accessToken: string | TokenProvider,
     options: DexAggregatorOptions = {}
@@ -104,6 +108,8 @@ export class DexClient {
     this.wallet = new WalletApi(config);
     this.redPacket = new RedPacketApi(config);
     this.ipfs = new IpfsApi(config);
+    this.blockchain = new BlockchainApi(config);
+    this.watchlist = new WatchlistApi(config);
     this.stream.connect();
   }
 
