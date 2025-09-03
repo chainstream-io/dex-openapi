@@ -1,6 +1,6 @@
 {
   "name": "@chainstream-io/sdk",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Dex API client and webhook verification library",
   "author": "AI",
   "repository": "https://github.com/chainstream-io/dex",
