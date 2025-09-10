@@ -117,6 +117,9 @@ export interface TokenHolder {
   top10Holders?: number;
   top100Ratio?: string;
   top10Ratio?: string;
+  creatorsHolders?: number;
+  creatorsAmount?: string;
+  creatorsRatio?: string;
   timestamp: number;
 }
 
@@ -177,14 +180,27 @@ export interface TokenLiquidity {
   timestamp: number;
 }
 
+export interface DexProtocol {
+  programAddress?: string;
+  protocolFamily?: string;
+  protocolName?: string;
+}
+
+export interface TokenBondingCurve {
+  progressRatio?: string;
+}
+
 export interface TokenMetadata {
   tokenAddress: string;
   name?: string;
+  decimals?: number;
   symbol?: string;
   imageUrl?: string;
   description?: string;
   socialMedia?: socialMedia;
   createdAtMs?: number;
+  launchFrom?: DexProtocol;
+  migratedTo?: DexProtocol;
 }
 
 export interface socialMedia {
@@ -279,5 +295,10 @@ export enum Dex {
   MOONIT_FUN = "moonit_fun",
 }
 
-export interface RankingTokenList extends TokenMetadata, TokenHolder, TokenSupply, TokenStat {
+export interface RankingTokenList {
+  metadata?: TokenMetadata;
+  holder?: TokenHolder;
+  supply?: TokenSupply;
+  stat?: TokenStat;
+  bondingCurve?: TokenBondingCurve;
 }

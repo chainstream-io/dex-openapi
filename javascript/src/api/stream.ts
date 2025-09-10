@@ -297,7 +297,7 @@ export class StreamApi {
         price24h: this.formatScientificNotation(data.p24h),
         openInUsd24h: this.formatScientificNotation(data.oiu24h),
         closeInUsd24h: this.formatScientificNotation(data.ciu24h),
-        
+
         price: this.formatScientificNotation(data.p),
       }), filter, "subscribeTokenStats");
   }
@@ -324,6 +324,9 @@ export class StreamApi {
         top10Holders: data.t10h,
         top100Ratio: this.formatScientificNotation(data.t100r),
         top10Ratio: this.formatScientificNotation(data.t10r),
+        creatorsHolders: data.ch,
+        creatorsAmount: this.formatScientificNotation(data.ca),
+        creatorsRatio: this.formatScientificNotation(data.cr),
         timestamp: data.ts,
       }), filter, "subscribeTokenHolders");
   }
@@ -359,31 +362,31 @@ export class StreamApi {
       callback(
         data.map(
           (it: any) =>
-            ({
-              tokenAddress: it.a,
-              name: it.n,
-              symbol: it.s,
-              imageUrl: it.iu,
-              description: it.de,
-              socialMedia: (() => {
-                const socialMedia: any = {};
-                if (it.sm?.tw) {socialMedia.twitter = it.sm.tw}
-                if (it.sm?.tg) {socialMedia.telegram = it.sm.tg}
-                if (it.sm?.w) {socialMedia.website = it.sm.w}
-                if (it.sm?.tt) {socialMedia.tiktok = it.sm.tt}
-                if (it.sm?.dc) {socialMedia.discord = it.sm.dc}
-                if (it.sm?.fb) {socialMedia.facebook = it.sm.fb}
-                if (it.sm?.gh) {socialMedia.github = it.sm.gh}
-                if (it.sm?.ig) {socialMedia.instagram = it.sm.ig}
-                if (it.sm?.li) {socialMedia.linkedin = it.sm.li}
-                if (it.sm?.md) {socialMedia.medium = it.sm.md}
-                if (it.sm?.rd) {socialMedia.reddit = it.sm.rd}
-                if (it.sm?.yt) {socialMedia.youtube = it.sm.yt}
-                if (it.sm?.bb) {socialMedia.bitbucket = it.sm.bb}
-                return socialMedia;
-              })(),
-              createdAtMs: it.cts,
-            })
+          ({
+            tokenAddress: it.a,
+            name: it.n,
+            symbol: it.s,
+            imageUrl: it.iu,
+            description: it.de,
+            socialMedia: (() => {
+              const socialMedia: any = {};
+              if (it.sm?.tw) { socialMedia.twitter = it.sm.tw }
+              if (it.sm?.tg) { socialMedia.telegram = it.sm.tg }
+              if (it.sm?.w) { socialMedia.website = it.sm.w }
+              if (it.sm?.tt) { socialMedia.tiktok = it.sm.tt }
+              if (it.sm?.dc) { socialMedia.discord = it.sm.dc }
+              if (it.sm?.fb) { socialMedia.facebook = it.sm.fb }
+              if (it.sm?.gh) { socialMedia.github = it.sm.gh }
+              if (it.sm?.ig) { socialMedia.instagram = it.sm.ig }
+              if (it.sm?.li) { socialMedia.linkedin = it.sm.li }
+              if (it.sm?.md) { socialMedia.medium = it.sm.md }
+              if (it.sm?.rd) { socialMedia.reddit = it.sm.rd }
+              if (it.sm?.yt) { socialMedia.youtube = it.sm.yt }
+              if (it.sm?.bb) { socialMedia.bitbucket = it.sm.bb }
+              return socialMedia;
+            })(),
+            createdAtMs: it.cts,
+          })
         )
       )
     );
@@ -491,7 +494,7 @@ export class StreamApi {
     dex?: Dex;
     callback: (data: RankingTokenList[]) => void;
   }): Unsubscrible {
-    const channel = dex 
+    const channel = dex
       ? `dex-ranking-list:${chain}_${ranking_type}_${dex}`
       : `dex-ranking-list:${chain}_${ranking_type}`;
     return this.subscribe(channel, (data: any[]) =>
@@ -501,135 +504,163 @@ export class StreamApi {
 
           // TokenMetadata (t)
           if (item.t) {
-            result.tokenAddress = item.t.a;
-            if (item.t.n) {result.name = item.t.n}
-            if (item.t.s) {result.symbol = item.t.s}
-            if (item.t.iu) {result.imageUrl = item.t.iu}
-            if (item.t.de) {result.description = item.t.de}
-            if (item.t.sm) {
-              result.socialMedia = {};
-              if (item.t.sm.tw) {result.socialMedia.twitter = item.t.sm.tw}
-              if (item.t.sm.tg) {result.socialMedia.telegram = item.t.sm.tg}
-              if (item.t.sm.w) {result.socialMedia.website = item.t.sm.w}
-              if (item.t.sm.tt) {result.socialMedia.tiktok = item.t.sm.tt}
-              if (item.t.sm.dc) {result.socialMedia.discord = item.t.sm.dc}
-              if (item.t.sm.fb) {result.socialMedia.facebook = item.t.sm.fb}
-              if (item.t.sm.gh) {result.socialMedia.github = item.t.sm.gh}
-              if (item.t.sm.ig) {result.socialMedia.instagram = item.t.sm.ig}
-              if (item.t.sm.li) {result.socialMedia.linkedin = item.t.sm.li}
-              if (item.t.sm.md) {result.socialMedia.medium = item.t.sm.md}
-              if (item.t.sm.rd) {result.socialMedia.reddit = item.t.sm.rd}
-              if (item.t.sm.yt) {result.socialMedia.youtube = item.t.sm.yt}
-              if (item.t.sm.bb) {result.socialMedia.bitbucket = item.t.sm.bb}
+            result.metadata = {
+              tokenAddress: item.t.a,
+            };
+            if (item.t.n) { result.metadata.name = item.t.n }
+            if (item.t.s) { result.metadata.symbol = item.t.s }
+            if (item.t.iu) { result.metadata.imageUrl = item.t.iu }
+            if (item.t.de) { result.metadata.description = item.t.de }
+            if (item.t.d) { result.metadata.decimals = item.t.dec }
+            if (item.t.cts) { result.metadata.createdAtMs = item.t.cts }
+            if (item.t.lf) {
+              result.metadata.launchFrom = {};
+              if (item.t.lf.pa) { result.metadata.launchFrom.programAddress = item.t.lf.pa }
+              if (item.t.lf.pf) { result.metadata.launchFrom.protocolFamily = item.t.lf.pf }
+              if (item.t.lf.pn) { result.metadata.launchFrom.protocolName = item.t.lf.pn }
             }
-            if (item.t.cts) {result.createdAtMs = item.t.cts}
+            if (item.t.mt) {
+              result.metadata.migratedTo = {};
+              if (item.t.mt.pa) { result.metadata.migratedTo.programAddress = item.t.mt.pa }
+              if (item.t.mt.pf) { result.metadata.migratedTo.protocolFamily = item.t.mt.pf }
+              if (item.t.mt.pn) { result.metadata.migratedTo.protocolName = item.t.mt.pn }
+            }
+            if (item.t.sm) {
+              result.metadata.socialMedia = {};
+              if (item.t.sm.tw) { result.metadata.socialMedia.twitter = item.t.sm.tw }
+              if (item.t.sm.tg) { result.metadata.socialMedia.telegram = item.t.sm.tg }
+              if (item.t.sm.w) { result.metadata.socialMedia.website = item.t.sm.w }
+              if (item.t.sm.tt) { result.metadata.socialMedia.tiktok = item.t.sm.tt }
+              if (item.t.sm.dc) { result.metadata.socialMedia.discord = item.t.sm.dc }
+              if (item.t.sm.fb) { result.metadata.socialMedia.facebook = item.t.sm.fb }
+              if (item.t.sm.gh) { result.metadata.socialMedia.github = item.t.sm.gh }
+              if (item.t.sm.ig) { result.metadata.socialMedia.instagram = item.t.sm.ig }
+              if (item.t.sm.li) { result.metadata.socialMedia.linkedin = item.t.sm.li }
+              if (item.t.sm.md) { result.metadata.socialMedia.medium = item.t.sm.md }
+              if (item.t.sm.rd) { result.metadata.socialMedia.reddit = item.t.sm.rd }
+              if (item.t.sm.yt) { result.metadata.socialMedia.youtube = item.t.sm.yt }
+              if (item.t.sm.bb) { result.metadata.socialMedia.bitbucket = item.t.sm.bb }
+            }
+            if (item.t.cts) { result.metadata.createdAtMs = item.t.cts }
+          }
+
+          // TokenBondingCurve (bc)
+          if (item.bc) {
+            result.bondingCurve = {};
+            if (item.bc.pr) { result.bondingCurve.progressRatio = this.formatScientificNotation(item.bc.pr) }
           }
 
           // TokenHolder (h)
           if (item.h) {
-            if (item.h.a) {result.tokenAddress = item.h.a}
-            if (item.h.h !== undefined) {result.holders = item.h.h}
-            if (item.h.t100a !== undefined) {result.top100Amount = this.formatScientificNotation(item.h.t100a)}
-            if (item.h.t10a !== undefined) {result.top10Amount = this.formatScientificNotation(item.h.t10a)}
-            if (item.h.t100h !== undefined) {result.top100Holders = item.h.t100h}
-            if (item.h.t10h !== undefined) {result.top10Holders = item.h.t10h}
-            if (item.h.t100r !== undefined) {result.top100Ratio = this.formatScientificNotation(item.h.t100r)}
-            if (item.h.t10r !== undefined) {result.top10Ratio = this.formatScientificNotation(item.h.t10r)}
-            if (item.h.ts !== undefined) {result.timestamp = item.h.ts}
+            result.holder = {
+              tokenAddress: item.h.a,
+              timestamp: item.h.ts || 0,
+            };
+            if (item.h.h) { result.holder.holders = item.h.h }
+            if (item.h.t100a) { result.holder.top100Amount = this.formatScientificNotation(item.h.t100a) }
+            if (item.h.t10a) { result.holder.top10Amount = this.formatScientificNotation(item.h.t10a) }
+            if (item.h.t100h) { result.holder.top100Holders = item.h.t100h }
+            if (item.h.t10h) { result.holder.top10Holders = item.h.t10h }
+            if (item.h.t100r) { result.holder.top100Ratio = this.formatScientificNotation(item.h.t100r) }
+            if (item.h.t10r) { result.holder.top10Ratio = this.formatScientificNotation(item.h.t10r) }
           }
 
           // TokenSupply (s)
           if (item.s) {
-            if (item.s.a) {result.tokenAddress = item.s.a}
-            if (item.s.s !== undefined) {result.supply = item.s.s}
-            if (item.s.mc !== undefined) {result.marketCapInUsd = item.s.mc}
-            if (item.s.ts !== undefined) {result.timestamp = item.s.ts}
+            result.supply = {
+              tokenAddress: item.s.a,
+              timestamp: item.s.ts || 0,
+            };
+            if (item.s.s) { result.supply.supply = item.s.s }
+            if (item.s.mc) { result.supply.marketCapInUsd = item.s.mc }
           }
 
           // TokenStat (ts)
           if (item.ts) {
-            if (item.ts.a) {result.address = item.ts.a}
-            if (item.ts.t !== undefined) {result.timestamp = item.ts.t}
-            
+            result.stat = {
+              address: item.ts.a,
+              timestamp: item.ts.t || 0,
+            };
+
             // 1m data
-            if (item.ts.b1m !== undefined) {result.buys1m = item.ts.b1m}
-            if (item.ts.s1m !== undefined) {result.sells1m = item.ts.s1m}
-            if (item.ts.be1m !== undefined) {result.buyers1m = item.ts.be1m}
-            if (item.ts.se1m !== undefined) {result.sellers1m = item.ts.se1m}
-            if (item.ts.bviu1m !== undefined) {result.buyVolumeInUsd1m = this.formatScientificNotation(item.ts.bviu1m)}
-            if (item.ts.sviu1m !== undefined) {result.sellVolumeInUsd1m = this.formatScientificNotation(item.ts.sviu1m)}
-            if (item.ts.p1m !== undefined) {result.price1m = this.formatScientificNotation(item.ts.p1m)}
-            if (item.ts.oiu1m !== undefined) {result.openInUsd1m = this.formatScientificNotation(item.ts.oiu1m)}
-            if (item.ts.ciu1m !== undefined) {result.closeInUsd1m = this.formatScientificNotation(item.ts.ciu1m)}
+            if (item.ts.b1m) { result.stat.buys1m = item.ts.b1m }
+            if (item.ts.s1m) { result.stat.sells1m = item.ts.s1m }
+            if (item.ts.be1m) { result.stat.buyers1m = item.ts.be1m }
+            if (item.ts.se1m) { result.stat.sellers1m = item.ts.se1m }
+            if (item.ts.bviu1m) { result.stat.buyVolumeInUsd1m = this.formatScientificNotation(item.ts.bviu1m) }
+            if (item.ts.sviu1m) { result.stat.sellVolumeInUsd1m = this.formatScientificNotation(item.ts.sviu1m) }
+            if (item.ts.p1m) { result.stat.price1m = this.formatScientificNotation(item.ts.p1m) }
+            if (item.ts.oiu1m) { result.stat.openInUsd1m = this.formatScientificNotation(item.ts.oiu1m) }
+            if (item.ts.ciu1m) { result.stat.closeInUsd1m = this.formatScientificNotation(item.ts.ciu1m) }
 
             // 5m data
-            if (item.ts.b5m !== undefined) {result.buys5m = item.ts.b5m}
-            if (item.ts.s5m !== undefined) {result.sells5m = item.ts.s5m}
-            if (item.ts.be5m !== undefined) {result.buyers5m = item.ts.be5m}
-            if (item.ts.se5m !== undefined) {result.sellers5m = item.ts.se5m}
-            if (item.ts.bviu5m !== undefined) {result.buyVolumeInUsd5m = this.formatScientificNotation(item.ts.bviu5m)}
-            if (item.ts.sviu5m !== undefined) {result.sellVolumeInUsd5m = this.formatScientificNotation(item.ts.sviu5m)}
-            if (item.ts.p5m !== undefined) {result.price5m = this.formatScientificNotation(item.ts.p5m)}
-            if (item.ts.oiu5m !== undefined) {result.openInUsd5m = this.formatScientificNotation(item.ts.oiu5m)}
-            if (item.ts.ciu5m !== undefined) {result.closeInUsd5m = this.formatScientificNotation(item.ts.ciu5m)}
+            if (item.ts.b5m) { result.stat.buys5m = item.ts.b5m }
+            if (item.ts.s5m) { result.stat.sells5m = item.ts.s5m }
+            if (item.ts.be5m) { result.stat.buyers5m = item.ts.be5m }
+            if (item.ts.se5m) { result.stat.sellers5m = item.ts.se5m }
+            if (item.ts.bviu5m) { result.stat.buyVolumeInUsd5m = this.formatScientificNotation(item.ts.bviu5m) }
+            if (item.ts.sviu5m) { result.stat.sellVolumeInUsd5m = this.formatScientificNotation(item.ts.sviu5m) }
+            if (item.ts.p5m) { result.stat.price5m = this.formatScientificNotation(item.ts.p5m) }
+            if (item.ts.oiu5m) { result.stat.openInUsd5m = this.formatScientificNotation(item.ts.oiu5m) }
+            if (item.ts.ciu5m) { result.stat.closeInUsd5m = this.formatScientificNotation(item.ts.ciu5m) }
 
             // 15m data
-            if (item.ts.b15m !== undefined) {result.buys15m = item.ts.b15m}
-            if (item.ts.s15m !== undefined) {result.sells15m = item.ts.s15m}
-            if (item.ts.be15m !== undefined) {result.buyers15m = item.ts.be15m}
-            if (item.ts.se15m !== undefined) {result.sellers15m = item.ts.se15m}
-            if (item.ts.bviu15m !== undefined) {result.buyVolumeInUsd15m = this.formatScientificNotation(item.ts.bviu15m)}
-            if (item.ts.sviu15m !== undefined) {result.sellVolumeInUsd15m = this.formatScientificNotation(item.ts.sviu15m)}
-            if (item.ts.p15m !== undefined) {result.price15m = this.formatScientificNotation(item.ts.p15m)}
-            if (item.ts.oiu15m !== undefined) {result.openInUsd15m = this.formatScientificNotation(item.ts.oiu15m)}
-            if (item.ts.ciu15m !== undefined) {result.closeInUsd15m = this.formatScientificNotation(item.ts.ciu15m)}
+            if (item.ts.b15m) { result.stat.buys15m = item.ts.b15m }
+            if (item.ts.s15m) { result.stat.sells15m = item.ts.s15m }
+            if (item.ts.be15m) { result.stat.buyers15m = item.ts.be15m }
+            if (item.ts.se15m) { result.stat.sellers15m = item.ts.se15m }
+            if (item.ts.bviu15m) { result.stat.buyVolumeInUsd15m = this.formatScientificNotation(item.ts.bviu15m) }
+            if (item.ts.sviu15m) { result.stat.sellVolumeInUsd15m = this.formatScientificNotation(item.ts.sviu15m) }
+            if (item.ts.p15m) { result.stat.price15m = this.formatScientificNotation(item.ts.p15m) }
+            if (item.ts.oiu15m) { result.stat.openInUsd15m = this.formatScientificNotation(item.ts.oiu15m) }
+            if (item.ts.ciu15m) { result.stat.closeInUsd15m = this.formatScientificNotation(item.ts.ciu15m) }
 
             // 30m data
-            if (item.ts.b30m !== undefined) {result.buys30m = item.ts.b30m}
-            if (item.ts.s30m !== undefined) {result.sells30m = item.ts.s30m}
-            if (item.ts.be30m !== undefined) {result.buyers30m = item.ts.be30m}
-            if (item.ts.se30m !== undefined) {result.sellers30m = item.ts.se30m}
-            if (item.ts.bviu30m !== undefined) {result.buyVolumeInUsd30m = this.formatScientificNotation(item.ts.bviu30m)}
-            if (item.ts.sviu30m !== undefined) {result.sellVolumeInUsd30m = this.formatScientificNotation(item.ts.sviu30m)}
-            if (item.ts.p30m !== undefined) {result.price30m = this.formatScientificNotation(item.ts.p30m)}
-            if (item.ts.oiu30m !== undefined) {result.openInUsd30m = this.formatScientificNotation(item.ts.oiu30m)}
-            if (item.ts.ciu30m !== undefined) {result.closeInUsd30m = this.formatScientificNotation(item.ts.ciu30m)}
+            if (item.ts.b30m) { result.stat.buys30m = item.ts.b30m }
+            if (item.ts.s30m) { result.stat.sells30m = item.ts.s30m }
+            if (item.ts.be30m) { result.stat.buyers30m = item.ts.be30m }
+            if (item.ts.se30m) { result.stat.sellers30m = item.ts.se30m }
+            if (item.ts.bviu30m) { result.stat.buyVolumeInUsd30m = this.formatScientificNotation(item.ts.bviu30m) }
+            if (item.ts.sviu30m) { result.stat.sellVolumeInUsd30m = this.formatScientificNotation(item.ts.sviu30m) }
+            if (item.ts.p30m) { result.stat.price30m = this.formatScientificNotation(item.ts.p30m) }
+            if (item.ts.oiu30m) { result.stat.openInUsd30m = this.formatScientificNotation(item.ts.oiu30m) }
+            if (item.ts.ciu30m) { result.stat.closeInUsd30m = this.formatScientificNotation(item.ts.ciu30m) }
 
             // 1h data
-            if (item.ts.b1h !== undefined) {result.buys1h = item.ts.b1h}
-            if (item.ts.s1h !== undefined) {result.sells1h = item.ts.s1h}
-            if (item.ts.be1h !== undefined) {result.buyers1h = item.ts.be1h}
-            if (item.ts.se1h !== undefined) {result.sellers1h = item.ts.se1h}
-            if (item.ts.bviu1h !== undefined) {result.buyVolumeInUsd1h = this.formatScientificNotation(item.ts.bviu1h)}
-            if (item.ts.sviu1h !== undefined) {result.sellVolumeInUsd1h = this.formatScientificNotation(item.ts.sviu1h)}
-            if (item.ts.p1h !== undefined) {result.price1h = this.formatScientificNotation(item.ts.p1h)}
-            if (item.ts.oiu1h !== undefined) {result.openInUsd1h = this.formatScientificNotation(item.ts.oiu1h)}
-            if (item.ts.ciu1h !== undefined) {result.closeInUsd1h = this.formatScientificNotation(item.ts.ciu1h)}
+            if (item.ts.b1h) { result.stat.buys1h = item.ts.b1h }
+            if (item.ts.s1h) { result.stat.sells1h = item.ts.s1h }
+            if (item.ts.be1h) { result.stat.buyers1h = item.ts.be1h }
+            if (item.ts.se1h) { result.stat.sellers1h = item.ts.se1h }
+            if (item.ts.bviu1h) { result.stat.buyVolumeInUsd1h = this.formatScientificNotation(item.ts.bviu1h) }
+            if (item.ts.sviu1h) { result.stat.sellVolumeInUsd1h = this.formatScientificNotation(item.ts.sviu1h) }
+            if (item.ts.p1h) { result.stat.price1h = this.formatScientificNotation(item.ts.p1h) }
+            if (item.ts.oiu1h) { result.stat.openInUsd1h = this.formatScientificNotation(item.ts.oiu1h) }
+            if (item.ts.ciu1h) { result.stat.closeInUsd1h = this.formatScientificNotation(item.ts.ciu1h) }
 
             // 4h data
-            if (item.ts.b4h !== undefined) {result.buys4h = item.ts.b4h}
-            if (item.ts.s4h !== undefined) {result.sells4h = item.ts.s4h}
-            if (item.ts.be4h !== undefined) {result.buyers4h = item.ts.be4h}
-            if (item.ts.se4h !== undefined) {result.sellers4h = item.ts.se4h}
-            if (item.ts.bviu4h !== undefined) {result.buyVolumeInUsd4h = this.formatScientificNotation(item.ts.bviu4h)}
-            if (item.ts.sviu4h !== undefined) {result.sellVolumeInUsd4h = this.formatScientificNotation(item.ts.sviu4h)}
-            if (item.ts.p4h !== undefined) {result.price4h = this.formatScientificNotation(item.ts.p4h)}
-            if (item.ts.oiu4h !== undefined) {result.openInUsd4h = this.formatScientificNotation(item.ts.oiu4h)}
-            if (item.ts.ciu4h !== undefined) {result.closeInUsd4h = this.formatScientificNotation(item.ts.ciu4h)}
+            if (item.ts.b4h) { result.stat.buys4h = item.ts.b4h }
+            if (item.ts.s4h) { result.stat.sells4h = item.ts.s4h }
+            if (item.ts.be4h) { result.stat.buyers4h = item.ts.be4h }
+            if (item.ts.se4h) { result.stat.sellers4h = item.ts.se4h }
+            if (item.ts.bviu4h) { result.stat.buyVolumeInUsd4h = this.formatScientificNotation(item.ts.bviu4h) }
+            if (item.ts.sviu4h) { result.stat.sellVolumeInUsd4h = this.formatScientificNotation(item.ts.sviu4h) }
+            if (item.ts.p4h) { result.stat.price4h = this.formatScientificNotation(item.ts.p4h) }
+            if (item.ts.oiu4h) { result.stat.openInUsd4h = this.formatScientificNotation(item.ts.oiu4h) }
+            if (item.ts.ciu4h) { result.stat.closeInUsd4h = this.formatScientificNotation(item.ts.ciu4h) }
 
             // 24h data
-            if (item.ts.b24h !== undefined) {result.buys24h = item.ts.b24h}
-            if (item.ts.s24h !== undefined) {result.sells24h = item.ts.s24h}
-            if (item.ts.be24h !== undefined) {result.buyers24h = item.ts.be24h}
-            if (item.ts.se24h !== undefined) {result.sellers24h = item.ts.se24h}
-            if (item.ts.bviu24h !== undefined) {result.buyVolumeInUsd24h = this.formatScientificNotation(item.ts.bviu24h)}
-            if (item.ts.sviu24h !== undefined) {result.sellVolumeInUsd24h = this.formatScientificNotation(item.ts.sviu24h)}
-            if (item.ts.p24h !== undefined) {result.price24h = this.formatScientificNotation(item.ts.p24h)}
-            if (item.ts.oiu24h !== undefined) {result.openInUsd24h = this.formatScientificNotation(item.ts.oiu24h)}
-            if (item.ts.ciu24h !== undefined) {result.closeInUsd24h = this.formatScientificNotation(item.ts.ciu24h)}
+            if (item.ts.b24h) { result.stat.buys24h = item.ts.b24h }
+            if (item.ts.s24h) { result.stat.sells24h = item.ts.s24h }
+            if (item.ts.be24h) { result.stat.buyers24h = item.ts.be24h }
+            if (item.ts.se24h) { result.stat.sellers24h = item.ts.se24h }
+            if (item.ts.bviu24h) { result.stat.buyVolumeInUsd24h = this.formatScientificNotation(item.ts.bviu24h) }
+            if (item.ts.sviu24h) { result.stat.sellVolumeInUsd24h = this.formatScientificNotation(item.ts.sviu24h) }
+            if (item.ts.p24h) { result.stat.price24h = this.formatScientificNotation(item.ts.p24h) }
+            if (item.ts.oiu24h) { result.stat.openInUsd24h = this.formatScientificNotation(item.ts.oiu24h) }
+            if (item.ts.ciu24h) { result.stat.closeInUsd24h = this.formatScientificNotation(item.ts.ciu24h) }
 
             // Current price
-            if (item.ts.p !== undefined) {result.price = this.formatScientificNotation(item.ts.p)}
+            if (item.ts.p) { result.stat.price = this.formatScientificNotation(item.ts.p) }
           }
 
           return result;
@@ -769,12 +800,12 @@ export class StreamApi {
       callback(
         data?.map(
           (it: any) =>
-            ({
-              tokenAddress: it.a,
-              supply: it.s,
-              marketCapInUsd: it.mc,
-              timestamp: it.ts,
-            })
+          ({
+            tokenAddress: it.a,
+            supply: it.s,
+            marketCapInUsd: it.mc,
+            timestamp: it.ts,
+          })
         )
       )
     );
